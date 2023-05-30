@@ -1,7 +1,11 @@
 export const NAVIGATION_LITERALS = {
-    DASHBOARD: 'dashboard',
-    PROFILE: 'profile',
+    LOGIN_STACK: 'login-stack',
     DASHBOARD_STACK: 'dashboard-stack',
     PROFILE_STACK: 'profile-stack',
+    
+    DASHBOARD: 'dashboard-screen',
+    PROFILE: 'profile-screen',
     TAB_NAVIGATOR: 'tab-navigator',
+    LOGIN: 'login-screen',
+    REGISTER: 'register-screen',
 }

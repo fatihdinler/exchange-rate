@@ -1,16 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { NavigationContainer } from '@react-navigation/native'
 import TabNavigator from '../../navigation/tab/tab-navigator'
+import LoginStack from '../../navigation/stack/login-stack'
 
 const Layout = () => {
-  return (
-    <NavigationContainer>
-      <TabNavigator />
-    </NavigationContainer>
-  );
-};
+  let authenticated = true
 
-export default Layout;
+  return <NavigationContainer>{authenticated ? <TabNavigator /> : <LoginStack />}</NavigationContainer>
+}
 
-const styles = StyleSheet.create({});
+export default Layout
+
+const styles = StyleSheet.create({})
