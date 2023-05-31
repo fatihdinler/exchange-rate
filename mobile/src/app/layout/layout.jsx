@@ -5,7 +5,7 @@ import TabNavigator from '../../navigation/tab/tab-navigator'
 import LoginStack from '../../navigation/stack/login-stack'
 
 const Layout = () => {
-  let authenticated = true
+  let authenticated = false
 
   return <NavigationContainer>{authenticated ? <TabNavigator /> : <LoginStack />}</NavigationContainer>
 }
