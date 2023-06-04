@@ -1,16 +1,30 @@
 import { Text, View, Image, KeyboardAvoidingView, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Input from '../../components/input/input'
 import LoginAnimation from '../../components/login-animation/login-animation'
 import { getHeight } from '../../shared/constants/dimension'
 import { LIGHT_THEME_COLORS } from '../../shared/constants/colors'
 import LogButton from '../../components/button/log-button/log-button'
+import { useNavigation } from '@react-navigation/native'
+import { NAVIGATION_LITERALS } from '../../shared/constants/navigation'
+import { AuthContext } from '../../context/auth-context'
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isUsernameFocused, setIsUsernameFocused] = useState(false)
   const [isPasswordFocused, setIsPasswordFocused] = useState(false)
+
+  const navigation = useNavigation()
+  const { logIn } = useContext(AuthContext)
+
+  const handleLogin = () => {
+    logIn(username, password)
+  }
+
+  const navigateToRegister = () => {
+    navigation.navigate(NAVIGATION_LITERALS.REGISTER)
+  }
 
   return (
     <KeyboardAvoidingView
@@ -45,14 +59,15 @@ const LoginScreen = () => {
         />
         <View style={styles.buttonContainer}>
           <LogButton
-            onPress={() => null}
+            onPress={() => handleLogin()}
             logButtonType='login'
             content='Login'
           />
           <LogButton
-            onPress={() => null}
+            onPress={() => navigateToRegister()}
             logButtonType='register'
             content='Register'
+            disabled={username || password}
           />
         </View>
       </View>
