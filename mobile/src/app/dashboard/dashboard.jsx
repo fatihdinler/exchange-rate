@@ -1,29 +1,33 @@
-import { StyleSheet, Text, View, ScrollView, Button } from 'react-native'
-import React, { useState } from 'react'
-import Toolbar from '../../components/toolbar/toolbar'
-import { LIGHT_THEME_COLORS } from '../../shared/constants/colors'
+import { Button, StyleSheet, Text, View, SafeAreaView } from 'react-native'
+import React, {useContext} from 'react'
+import { useGetProductsQuery } from '../../redux/api'
+import { useSelector } from 'react-redux'
+import { AuthContext } from '../../context/auth-context'
+import SectionList from '../../components/list/section-list'
 
 const Dashboard = () => {
+
+  // const { data, isError, isFetching, isLoading } = useGetProductsQuery()
+  // console.log(data, isError, isFetching, isLoading)
+
+  // const state = useSelector(state => state)
+  // console.log(state)
+
+  const { logOut } = useContext(AuthContext)
+  
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.toolbarContainer}>
-          <Toolbar screenName='Dashboard' />
-        </View>
-    </ScrollView>
+    <SafeAreaView>
+      <SectionList />
+    </SafeAreaView>
   )
 }
 
 export default Dashboard
 
 const styles = StyleSheet.create({
-  generalContainer: {
-    backgroundColor: LIGHT_THEME_COLORS.BLACK,
-  },
   container: {
     flex: 1,
-    marginLeft: 20,
-  },
-  toolbarContainer: {
-    flex: 1 / 7,
-  },
+    justifyContent: 'center',
+    alignItems:'center',
+  }
 })

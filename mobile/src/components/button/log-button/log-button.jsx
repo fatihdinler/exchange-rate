@@ -4,7 +4,7 @@ import { LIGHT_THEME_COLORS } from '../../../shared/constants/colors'
 import { styles } from './log-button.style'
 import { getHeight } from '../../../shared/constants/dimension'
 
-const LogButton = ({ logButtonType, content, onPress }) => {
+const LogButton = ({ logButtonType, content, onPress, disabled }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -13,7 +13,9 @@ const LogButton = ({ logButtonType, content, onPress }) => {
             borderColor: logButtonType === 'register' ? LIGHT_THEME_COLORS.BLUE : null,
             borderWidth: logButtonType === 'register' ? 1 : 0
         }]}
-        onPress={() => onPress()}>
+        onPress={() => onPress()}
+        disabled={disabled ? disabled : null}
+        >
         <Text
           style={{
             color: logButtonType === 'login' ? LIGHT_THEME_COLORS.WHITE : LIGHT_THEME_COLORS.BLUE,

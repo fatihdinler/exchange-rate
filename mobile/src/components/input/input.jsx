@@ -5,7 +5,8 @@ import { styles } from './input.style'
 import { LIGHT_THEME_COLORS } from '../../shared/constants/colors'
 import { useState } from 'react'
 
-const Input = ({ iconName, isSecureTextEntry, placeholder, value, onChangeText, isFocused, onFocus }) => {
+const Input = ({
+   iconName, isSecureTextEntry, placeholder, value, onChangeText, isFocused, onFocus, keyboardType, autoCompleteType }) => {
   const [borderColor, setBorderColor] = useState(LIGHT_THEME_COLORS.GRAY1)
 
   return (
@@ -22,8 +23,10 @@ const Input = ({ iconName, isSecureTextEntry, placeholder, value, onChangeText, 
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
-        onFocus={() => handleFocus(setBorderColor, onFocus)}
-        onBlur={() => handleBlur(setBorderColor)}
+        onFocus={onFocus ? () => handleFocus(setBorderColor, onFocus) : null}
+        onBlur={onFocus ? () => handleBlur(setBorderColor) : null}
+        keyboardType={keyboardType ? keyboardType : null}
+        autoComplete={autoCompleteType ? autoCompleteType : null}
       />
     </View>
   )
