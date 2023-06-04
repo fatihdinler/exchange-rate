@@ -1,14 +1,10 @@
 const generalHook = require('../helper/store')
-const name = 'User'
-const tableName = 'users'
+const name = 'Favorites'
+const tableName = 'favorites'
 const selectableProps = [
   'id',
-  'username',
-  'password',
-  'email',
-  'firstname',
-  'lastname',
-  'language'
+  'user_id',
+  'favorites',
 ]
 
 module.exports = knex => {

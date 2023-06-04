@@ -4,6 +4,7 @@ exports.up = function (knex) {
     table.integer('user_id').unsigned().notNullable()
     table.foreign('user_id').references('id').inTable('users')
     table.string('token').notNullable()
+    table.string('type').notNullable()
     table.timestamp('expires_at').notNullable()
     table.timestamps(true, true)
   })

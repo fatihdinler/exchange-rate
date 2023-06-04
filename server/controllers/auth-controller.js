@@ -1,10 +1,7 @@
 const authService = require("../services/auth-service")
 const tokenService = require("../services/token-service")
 
-const {
-  createError,
-  BAD_REQUEST
-} = require('../helper/error-helper')
+const { createError, NOT_FOUND, BAD_REQUEST } = require('../helper/error')
 
 const login = async (req, res, next) => {
   const { username, password } = req.body
@@ -12,11 +9,23 @@ const login = async (req, res, next) => {
   if (!user) {
     return next(createError({
       status: BAD_REQUEST,
-      message: '`username` + `password` are required fields'
+      message: 'User not found'
     }))
   }
-  const tokens = await tokenService.generateAuthTokens(user)
+
+  const tokens = await tokenService.findByRefreshTokenAndGenerateAccessToken(user)
   res.send({ user, tokens })
 }
 
-module.exports = { login: login }
+const refreshToken = async (req, res, next) => {
+  const token = await authService.checkAuthThenGenerateNewToken(req.body.refreshToken)
+  res.send({ ...token })
+}
+
+
+
+
+module.exports = {
+  login: login,
+  refreshToken: refreshToken,
+}
