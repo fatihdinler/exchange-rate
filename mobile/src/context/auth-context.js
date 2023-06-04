@@ -8,9 +8,9 @@ export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
 
-    const signUpRoute = 'http://192.168.0.13:3000/sign-up'
-    const loginRoute = 'http://192.168.0.13:3000/login'
-    const refreshRoute = 'http://192.168.0.13:3000/refresh-token'
+    const signUpRoute = 'http://localhost:3001/sign-up'
+    const loginRoute = 'http://localhost:3001/login'
+    const refreshRoute = 'http://localhost:3001/refresh-token'
     const [userToken, setUserToken] = useState(null)
 
     const isTokenExpired = async () => {

@@ -3,7 +3,7 @@ import { products } from './services/products'
 import { user } from './services/user'
 export const api = createApi({
     reducerPath: 'api',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://192.168.0.13:3000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001' }),
     endpoints: (builder) => ({
         getProducts: builder.query({
             query: () => products()

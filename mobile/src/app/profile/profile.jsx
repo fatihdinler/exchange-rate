@@ -8,15 +8,14 @@ const Profile = () => {
   const { logOut } = useContext(AuthContext)
   const [userId, setUserId] = useState(null)
 
-  // useEffect(() => {
-  //   getRefreshToken(setUserId)
-  // }, [])
+  useEffect(() => {
+    getRefreshToken(setUserId)
+  }, [])
 
-  const { data: user, isError, error } = useGetUserQuery(1)
+  const { data: user, isError, error } = useGetUserQuery(userId)
 
   console.log(userId)
   console.log(user)
-  console.log(error)
 
   return (
       <View style={styles.container}>
