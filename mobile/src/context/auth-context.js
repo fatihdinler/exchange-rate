@@ -13,6 +13,8 @@ export const AuthProvider = ({ children }) => {
     const refreshRoute = 'http://192.168.0.13:3000/refresh-token'
     const [userToken, setUserToken] = useState(null)
 
+    console.log(loginRoute)
+
     const isTokenExpired = async () => {
         const accessToken = await AsyncStorage.getItem('access-token')
         const parsedAccessToken = JSON.parse(accessToken)
@@ -30,6 +32,8 @@ export const AuthProvider = ({ children }) => {
             username: username,
             password: password
         }
+
+        console.log(data)
 
         axios.post(loginRoute, data)
             .then(response => {
