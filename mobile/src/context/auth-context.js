@@ -3,14 +3,14 @@ import React, { createContext, useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
-
+import { API_KEYS } from '../shared/constants/config'
 export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
 
-    const signUpRoute = 'http://localhost:3001/sign-up'
-    const loginRoute = 'http://localhost:3001/login'
-    const refreshRoute = 'http://localhost:3001/refresh-token'
+    const signUpRoute = `${API_KEYS.API}/${API_KEYS.SIGN_UP}`
+    const loginRoute = `${API_KEYS.API}/${API_KEYS.LOGIN}`
+    const refreshRoute = `${API_KEYS.API}/${API_KEYS.REFRESH_TOKEN}`
     const [userToken, setUserToken] = useState(null)
 
     const isTokenExpired = async () => {

@@ -18,7 +18,7 @@ const Input = ({
         style={styles.logo}
       />
       <TextInput
-        style={[styles.input, { borderColor: isFocused ? LIGHT_THEME_COLORS.BLUE : borderColor }]}
+        style={[styles.input, { borderColor: isFocused ? LIGHT_THEME_COLORS.BLUE : borderColor, borderWidth: isFocused ? 2 : 1 }]}
         secureTextEntry={isSecureTextEntry}
         placeholder={placeholder}
         value={value}
