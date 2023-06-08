@@ -4,8 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { API_KEYS } from '../shared/constants/config'
+import { NAVIGATION_LITERALS } from '../shared/constants/navigation'
 export const AuthContext = createContext()
-
 export const AuthProvider = ({ children }) => {
 
     const signUpRoute = `${API_KEYS.API}/${API_KEYS.SIGN_UP}`

@@ -20,6 +20,9 @@ const LoginStack = () => {
       <Stack.Screen
         name={NAVIGATION_LITERALS.REGISTER}
         component={Register}
+        options={{
+          headerShown: false
+        }}
       />
     </Stack.Navigator>
   )

@@ -1,4 +1,4 @@
-import { Text, View, Image, KeyboardAvoidingView, StyleSheet } from 'react-native'
+import { Text, View, Image, KeyboardAvoidingView, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState, useContext } from 'react'
 import Input from '../../components/input/input'
 import LoginAnimation from '../../components/login-animation/login-animation'
@@ -7,7 +7,7 @@ import LogButton from '../../components/button/log-button/log-button'
 import { useNavigation } from '@react-navigation/native'
 import { NAVIGATION_LITERALS } from '../../shared/constants/navigation'
 import { AuthContext } from '../../context/auth-context'
-// import { Input } from 'native-base'
+import { getHeight } from '../../shared/constants/dimension'
 
 const LoginScreen = () => {
     const [username, setUsername] = useState('')
@@ -22,49 +22,56 @@ const LoginScreen = () => {
         logIn(username, password)
     }
 
-  const navigateToRegister = () => {
-    navigation.navigate(NAVIGATION_LITERALS.REGISTER)
-  }
+    const navigateToRegister = () => {
+        navigation.navigate(NAVIGATION_LITERALS.REGISTER)
+    }
     return (
         <KeyboardAvoidingView
             behavior='padding'
             style={styles.container}>
-            <View style={styles.animation}>
-                <LoginAnimation />
-            </View>
-            <View style={styles.form}>
-                <Text style={styles.loginHeader}>Hadi Başlayalım !</Text>
-                <Text style={styles.loginSubHeader}>Kullanıcı bilgilerini doldurarak giriş yap.</Text>
-                <View style={styles.inputs}>
-                    <Text style={styles.inputHeader}>Kullanıcı Adı</Text>
-                    <Input
-                        placeholder='johndoe'
-                        value={username}
-                        onChangeText={text => setUsername(text)}
-                        isFocused={isUsernameFocused}
-                        onFocus={() => handleFocus(setIsUsernameFocused, setIsPasswordFocused)}
-                    />
-                    <Text style={styles.inputHeader}>Şifre</Text>
-                    <Input
-                        isSecureTextEntry={true}
-                        placeholder='***'
-                        value={password}
-                        onChangeText={text => setPassword(text)}
-                        isFocused={isPasswordFocused}
-                        onFocus={() => handleFocus(setIsPasswordFocused, setIsUsernameFocused)}
-                    />
+            <View style={styles.layout}>
+                <View style={styles.animation}>
+                    <LoginAnimation />
                 </View>
-                <View style={styles.buttonContainer}>
-                <LogButton
-                    onPress={() => handleLogin()}
-                    logButtonType='login'
-                    content='Giriş Yap'
-                />
+                <View style={styles.form}>
+                    <Text style={styles.loginHeader}>Hadi Başlayalım !</Text>
+                    <Text style={styles.loginSubHeader}>Kullanıcı bilgilerini doldurarak giriş yap.</Text>
+                    <View style={styles.inputs}>
+                        <Text style={styles.inputHeader}>Kullanıcı Adı</Text>
+                        <Input
+                            placeholder='johndoe'
+                            value={username}
+                            onChangeText={text => setUsername(text)}
+                            isFocused={isUsernameFocused}
+                            onFocus={() => handleFocus(setIsUsernameFocused, setIsPasswordFocused)}
+                        />
+                        <Text style={styles.inputHeader}>Şifre</Text>
+                        <Input
+                            isSecureTextEntry={true}
+                            placeholder='***'
+                            value={password}
+                            onChangeText={text => setPassword(text)}
+                            isFocused={isPasswordFocused}
+                            onFocus={() => handleFocus(setIsPasswordFocused, setIsUsernameFocused)}
+                        />
+                    </View>
+                    <View style={styles.buttonContainer}>
+                        <LogButton
+                            onPress={() => handleLogin()}
+                            logButtonType='login'
+                            content='Giriş Yap'
+                        />
+                    </View>
+                    <View style={styles.bottomTextContainer}>
+                        <Text style={styles.bottomText}>Bir hesabın yok mu?</Text>
+                        <TouchableOpacity onPress={() => navigateToRegister()}>
+                            <Text style={styles.coloredBottomText}>Kayıt Ol.</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         </KeyboardAvoidingView>
     )
-
 }
 
 const handleFocus = (stateToBeFocused, stateToBeUnfocused) => {
@@ -76,6 +83,10 @@ export default LoginScreen
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+        backgroundColor: LIGHT_THEME_COLORS.WHITE,
+    },
+    layout: {
         flex: 1,
         margin: 15,
     },
@@ -110,52 +121,19 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     buttonContainer: {
-      marginTop: 15,
+        marginTop: 15,
+    },
+    bottomTextContainer: {
+        flexDirection: 'row',
+        alignSelf: 'center',
+        marginTop: 5,
+    },
+    bottomText: {
+        fontSize: getHeight() * 0.0145,
+    },
+    coloredBottomText: {
+        marginLeft: 5,
+        color: LIGHT_THEME_COLORS.BLUE,
+        fontSize: getHeight() * 0.0145,
     },
 })
-
-// <KeyboardAvoidingView
-//   style={styles.container}
-//   behavior='padding'>
-//   <View style={styles.upper}>
-//     <View style={styles.loginAnimation}>
-//       <LoginAnimation />
-//     </View>
-//     <View style={styles.textContainer}>
-//       <Text style={{ fontSize: getHeight() * 0.03, fontWeight: '300' }}>Welcome to </Text>
-//       <Text style={{ fontSize: getHeight() * 0.03, fontWeight: '300' }}>Soft</Text>
-//       <Text style={{ fontSize: getHeight() * 0.03, color: LIGHT_THEME_COLORS.BLUE, fontWeight: 'bold' }}>Blog</Text>
-//       <Text style={{ fontSize: getHeight() * 0.03, fontWeight: '300' }}> !</Text>
-//     </View>
-//   </View>
-//   <View style={styles.middle}>
-//     <Input
-//       placeholder={'Username'}
-//       value={username}
-//       onChangeText={text => setUsername(text)}
-//       isFocused={isUsernameFocused}
-//       onFocus={() => handleFocus(setIsUsernameFocused, setIsPasswordFocused)}
-//     />
-//     <Input
-//       isSecureTextEntry={true}
-//       placeholder='Password'
-//       value={password}
-//       onChangeText={text => setPassword(text)}
-//       isFocused={isPasswordFocused}
-//       onFocus={() => handleFocus(setIsPasswordFocused, setIsUsernameFocused)}
-//     />
-//     <View style={styles.buttonContainer}>
-//       <LogButton
-//         onPress={() => handleLogin()}
-//         logButtonType='login'
-//         content='Login'
-//       />
-//       <LogButton
-//         onPress={() => navigateToRegister()}
-//         logButtonType='register'
-//         content='Register'
-//         disabled={username || password}
-//       />
-//     </View>
-//   </View>
-// </KeyboardAvoidingView>
