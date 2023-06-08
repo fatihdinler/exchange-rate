@@ -4,7 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NAVIGATION_LITERALS } from '../../shared/constants/navigation'
 import DashboardStack from '../stack/dashboard-stack'
 import ProfileStack from '../stack/profile-stack'
-import { DashboardIcon, ProfileIcon } from '../../shared/constants/icons'
+import FavouritesStack from '../stack/favourites-stack'
+import { DashboardIcon, ProfileIcon, HeartIcon } from '../../shared/constants/icons'
 const TabNavigator = () => {
 
   const Tabs = createBottomTabNavigator()
@@ -27,6 +28,20 @@ const TabNavigator = () => {
             />
           )
         }}
+
+      />
+      <Tabs.Screen
+        name={NAVIGATION_LITERALS.FAVOURIES_STACK}
+        component={FavouritesStack}
+        options={{
+          tabBarLabel: 'Favourites',
+          tabBarIcon: ({ color, size }) => (
+            <HeartIcon
+              color={color}
+              size={size}
+            />
+          )
+        }}
       />
       <Tabs.Screen
         name={NAVIGATION_LITERALS.PROFILE_STACK}
@@ -41,6 +56,7 @@ const TabNavigator = () => {
           )
         }}
       />
+
     </Tabs.Navigator>
   )
 }

@@ -6,8 +6,8 @@ exports.up = (knex) => {
     table.string('email').notNullable()
     table.string('firstname').notNullable()
     table.string('lastname').notNullable()
-    table.string('profilePicture')
-    table.string('biography')
+    // table.json('favorites').defaultTo(JSON.stringify(['TRY', 'USD']))
+    table.string('language').defaultTo('en')
     table.timestamps(true, true);
   })
 }

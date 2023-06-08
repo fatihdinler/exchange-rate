@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const knex = require('../database/db-connector').knex
+const knex = require('../helper/db-connector').knex
 
 // Gather up all model files (i.e., any file present in the current directory
 // that is not this file) and export them as properties of an object such that

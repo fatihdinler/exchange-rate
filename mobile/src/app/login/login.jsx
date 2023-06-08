@@ -7,19 +7,20 @@ import LogButton from '../../components/button/log-button/log-button'
 import { useNavigation } from '@react-navigation/native'
 import { NAVIGATION_LITERALS } from '../../shared/constants/navigation'
 import { AuthContext } from '../../context/auth-context'
+// import { Input } from 'native-base'
 
 const LoginScreen = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [isUsernameFocused, setIsUsernameFocused] = useState(false)
-  const [isPasswordFocused, setIsPasswordFocused] = useState(false)
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [isUsernameFocused, setIsUsernameFocused] = useState(false)
+    const [isPasswordFocused, setIsPasswordFocused] = useState(false)
 
-  const navigation = useNavigation()
-  const { logIn } = useContext(AuthContext)
+    const navigation = useNavigation()
+    const { logIn } = useContext(AuthContext)
 
-  const handleLogin = () => {
-    logIn(username, password)
-  }
+    const handleLogin = () => {
+        logIn(username, password)
+    }
 
   const navigateToRegister = () => {
     navigation.navigate(NAVIGATION_LITERALS.REGISTER)
@@ -67,8 +68,8 @@ const LoginScreen = () => {
 }
 
 const handleFocus = (stateToBeFocused, stateToBeUnfocused) => {
-  stateToBeFocused(true)
-  stateToBeUnfocused(false)
+    stateToBeFocused(true)
+    stateToBeUnfocused(false)
 }
 
 export default LoginScreen
@@ -112,3 +113,49 @@ const styles = StyleSheet.create({
       marginTop: 15,
     },
 })
+
+// <KeyboardAvoidingView
+//   style={styles.container}
+//   behavior='padding'>
+//   <View style={styles.upper}>
+//     <View style={styles.loginAnimation}>
+//       <LoginAnimation />
+//     </View>
+//     <View style={styles.textContainer}>
+//       <Text style={{ fontSize: getHeight() * 0.03, fontWeight: '300' }}>Welcome to </Text>
+//       <Text style={{ fontSize: getHeight() * 0.03, fontWeight: '300' }}>Soft</Text>
+//       <Text style={{ fontSize: getHeight() * 0.03, color: LIGHT_THEME_COLORS.BLUE, fontWeight: 'bold' }}>Blog</Text>
+//       <Text style={{ fontSize: getHeight() * 0.03, fontWeight: '300' }}> !</Text>
+//     </View>
+//   </View>
+//   <View style={styles.middle}>
+//     <Input
+//       placeholder={'Username'}
+//       value={username}
+//       onChangeText={text => setUsername(text)}
+//       isFocused={isUsernameFocused}
+//       onFocus={() => handleFocus(setIsUsernameFocused, setIsPasswordFocused)}
+//     />
+//     <Input
+//       isSecureTextEntry={true}
+//       placeholder='Password'
+//       value={password}
+//       onChangeText={text => setPassword(text)}
+//       isFocused={isPasswordFocused}
+//       onFocus={() => handleFocus(setIsPasswordFocused, setIsUsernameFocused)}
+//     />
+//     <View style={styles.buttonContainer}>
+//       <LogButton
+//         onPress={() => handleLogin()}
+//         logButtonType='login'
+//         content='Login'
+//       />
+//       <LogButton
+//         onPress={() => navigateToRegister()}
+//         logButtonType='register'
+//         content='Register'
+//         disabled={username || password}
+//       />
+//     </View>
+//   </View>
+// </KeyboardAvoidingView>

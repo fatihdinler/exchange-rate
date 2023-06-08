@@ -9,7 +9,6 @@ module.exports = ({
   const create = props => {
     delete props.id
     return knex.insert(props)
-      .returning(selectableCollectionField)
       .into(tableName)
       .timeout(timeout)
   }
@@ -23,13 +22,10 @@ module.exports = ({
     .where(filters)
     .timeout(timeout)
 
-  const findOne = filters => find(filters)
-    .then(results => {
-      if (!Array.isArray(results)) {
-        return results
-      }
-      return results[0]
-    })
+  const findOne = filters => knex.select(selectableCollectionField)
+    .from(tableName)
+    .where(filters)
+    .first()
 
   const findById = id => knex.select(selectableCollectionField)
     .from(tableName)
@@ -42,7 +38,6 @@ module.exports = ({
     return knex.update(props)
       .from(tableName)
       .where({ id })
-      .returning(selectableCollectionField)
       .timeout(timeout)
   }
 

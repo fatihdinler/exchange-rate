@@ -1,8 +1,6 @@
 const generalHook = require('../helper/store')
-
 const name = 'Token'
 const tableName = 'tokens'
-
 const selectableProps = [
   'id',
   'user_id',

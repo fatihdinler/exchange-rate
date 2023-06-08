@@ -50,3 +50,13 @@ export const ProfileIcon = ({ color, size }) => {
         />
     )
 }
+
+export const HeartIcon = ({ color, size }) => {
+    return (
+        <AntDesign
+            name="hearto"
+            size={size}
+            color={color}
+        />
+    )
+}

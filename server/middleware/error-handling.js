@@ -6,7 +6,7 @@ const {
   NOT_FOUND,
   UNPROCESSABLE,
   GENERIC_ERROR
-} = require('../helper/error-helper')
+} = require('../helper/error')
 
 const unauthorized = (err, req, res, next) => {
   if (err.status !== UNAUTHORIZED) {
@@ -52,7 +52,7 @@ const badRequest = (err, req, res, next) => {
   res.status(BAD_REQUEST).send({
     ok: false,
     message: err.message || 'Bad Request',
-    errors: [err]
+    status: [err]
   })
 }
 
@@ -93,7 +93,7 @@ const catchall = (req, res, next) => {
   })
 }
 
-const exportables = {
+const decoratedErrors = {
   unauthorized,
   forbidden,
   conflict,
@@ -104,7 +104,6 @@ const exportables = {
   catchall
 }
 
-// All exportables stored as an array (e.g., for including in Express app.use())
-const all = Object.keys(exportables).map(key => exportables[key])
+const httpErrors = Object.keys(decoratedErrors).map(key => decoratedErrors[key])
 
-module.exports = { ...exportables, all }
+module.exports = { ...decoratedErrors, httpErrors }
