@@ -1,15 +1,7 @@
 const bcrypt = require('bcrypt')
 const tokenService = require('./token-service')
 const userService = require('./user-service')
-const { Token } = require('../models')
 const constant = require('../helper/constant')
-
-const {
-  createError,
-  BAD_REQUEST,
-  NOT_FOUND,
-  UNAUTHORIZED
-} = require('../helper/error')
 
 const login = async (username, password) => {
   const user = await userService.getUserByUsername(username)
