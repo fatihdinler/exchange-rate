@@ -6,7 +6,8 @@ const { validate } = require('./middleware/validate.js')
 
 const controllers = {
   auth: require('./controllers/auth-controller.js'),
-  user: require('./controllers/user-controller.js')
+  user: require('./controllers/user-controller.js'),
+  rate: require('./controllers/rate-controller.js'),
 }
 
 const routes = [
@@ -16,6 +17,8 @@ const routes = [
   { method: 'post', path: '/sign-up', controller: 'user', action: 'signUp', validation: userValidations.signUp },
   { method: 'get', path: '/users/:id', controller: 'user', action: 'getUser', validation: '' },
   { method: 'patch', path: '/users/:id', controller: 'user', action: 'updateUser', validation: userValidations.updateUser },
+
+  { method: 'get', path: '/rates', controller: 'rate', action: 'getLastRate', validation: '' },
 ]
 
 routes.forEach(route => {

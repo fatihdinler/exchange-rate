@@ -27,6 +27,11 @@ module.exports = ({
     .where(filters)
     .first()
 
+  const lastTwoRow = (column, optinalSorting) => knex.select(selectableCollectionField)
+    .from(tableName)
+    .orderBy(column, optinalSorting)
+    .limit(2);
+
   const findById = id => knex.select(selectableCollectionField)
     .from(tableName)
     .where({ id })
@@ -57,6 +62,7 @@ module.exports = ({
     findOne,
     findById,
     update,
-    destroy
+    destroy,
+    lastTwoRow
   }
 }
