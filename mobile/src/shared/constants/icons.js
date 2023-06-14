@@ -1,5 +1,6 @@
 import { AntDesign } from '@expo/vector-icons'
 import { Ionicons } from '@expo/vector-icons'
+import { EvilIcons } from '@expo/vector-icons'
 
 export const DashboardIcon = ({ color, size }) => {
     return (
@@ -55,6 +56,16 @@ export const HeartIcon = ({ color, size }) => {
     return (
         <AntDesign
             name="hearto"
+            size={size}
+            color={color}
+        />
+    )
+}
+
+export const SearchIcon = ({ color, size }) => {
+    return (
+        <EvilIcons
+            name="search"
             size={size}
             color={color}
         />

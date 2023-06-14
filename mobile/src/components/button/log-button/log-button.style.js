@@ -9,8 +9,8 @@ export const styles = StyleSheet.create({
     },
     button: {
       flex: 1,
-      borderRadius: 18,
-      height: getHeight() / 15,
+      borderRadius: 8,
+      height: getHeight() / 20,
       justifyContent: 'center',
       alignItems: 'center',
     },
