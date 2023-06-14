@@ -38,8 +38,6 @@ const getUser = async (req, res, next) => {
   }
   console.log("user bulundu")
   res.send({ user })
-
-
 }
 
 const updateUser = async (req, res, next) => {
@@ -69,7 +67,7 @@ const updateUser = async (req, res, next) => {
   res.send(await userServices.getUserById(req.params.id));
 }
 
-const deleteUser = (req, res, next) => {
+const deleteUser = (req, res, next) => { // TODOOOOOO
   const userId = req.params.id
 
   User.destroy(userId)
