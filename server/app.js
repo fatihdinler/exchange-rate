@@ -23,6 +23,6 @@ app.use(require('./middleware/error-handling').httpErrors)
 //   console.log(response) //or do something else
 // })
 
-app.listen(3000, () => {
+app.listen(config.APPLICATION_PORT, () => {
   console.log(`Exchange Rate app listening on port ${config.APPLICATION_PORT}`)
 })

@@ -1,27 +1,30 @@
 import { StyleSheet, Text, View, ScrollView, RefreshControl } from 'react-native'
-import React, { useState, useCallback } from 'react'
-import { useGetExchangeRatesQuery } from '../../redux/api'
+import React, { useState, useCallback, useEffect } from 'react'
+import { useGetRatesQuery } from '../../redux/api'
 import Searchbar from '../../components/searchbar/searchbar'
 import SearchbarButton from '../../components/searchbar/searchbar-button'
 import Toolbar from '../../components/toolbar/toolbar'
+import { useSelector } from 'react-redux'
 
 const Dashboard = () => {
     const [searchText, setSearchText] = useState('')
-    const [refreshing, setRefreshing] = useState(false)
+    const { data: rates, isLoading: isExchangeRatesLoading, isFetching: isExchangeRatesFetching, isError: isExchangeRatesError, refetch } = useGetRatesQuery()
 
-    const {
-        data: exchangeRates,
-        isLoading: isExchangeRatesLoading,
-        isFetching: isExchangeRatesFetching,
-        isError: isExchangeRatesError,
-    } = useGetExchangeRatesQuery()
+    const [isRefreshing, setIsRefreshing] = useState(false)
 
-    console.log('exchangeRates -->', exchangeRates)
+    const handleOnRefresh = useCallback(async () => {
+        setIsRefreshing(true)
+        await refetch()
+    }, [refetch])
 
-    const handleOnRefresh = useCallback( () => {
-        setRefreshing(true) // When it starts.
-        setRefreshing(false) // Use it when you want to stop refreshing.
-      }, [refreshing])
+    useEffect(() => {
+        if (!isExchangeRatesFetching) {
+            setIsRefreshing(false)
+        }
+    }, [isExchangeRatesFetching])
+
+
+    console.log('Rates -->', rates)
 
     return (
         <View style={styles.container}>
@@ -40,12 +43,12 @@ const Dashboard = () => {
                 style={{ flex: 1, marginTop: 15 }}
                 refreshControl={
                     <RefreshControl
-                        refreshing={refreshing}
+                        refreshing={isRefreshing}
                         onRefresh={handleOnRefresh}
                     />
                 }>
-
-                </ScrollView>
+                {/* Display rates here */}
+            </ScrollView>
         </View>
     )
 }
@@ -64,7 +67,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    
 })
 
 // const { data, isError, isFetching, isLoading } = useGetProductsQuery()
