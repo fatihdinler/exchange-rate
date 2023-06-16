@@ -5,26 +5,21 @@ import Searchbar from '../../components/searchbar/searchbar'
 import SearchbarButton from '../../components/searchbar/searchbar-button'
 import Toolbar from '../../components/toolbar/toolbar'
 import { useSelector } from 'react-redux'
+import SectionList from '../../components/list/section-list'
 
 const Dashboard = () => {
     const [searchText, setSearchText] = useState('')
-    const { data: rates, isLoading: isExchangeRatesLoading, isFetching: isExchangeRatesFetching, isError: isExchangeRatesError, refetch } = useGetRatesQuery()
+    const { data: rates, isLoading, refetch } = useGetRatesQuery()
 
     const [isRefreshing, setIsRefreshing] = useState(false)
 
     const handleOnRefresh = useCallback(async () => {
         setIsRefreshing(true)
         await refetch()
+        setIsRefreshing(false)
     }, [refetch])
 
-    useEffect(() => {
-        if (!isExchangeRatesFetching) {
-            setIsRefreshing(false)
-        }
-    }, [isExchangeRatesFetching])
-
-
-    console.log('Rates -->', rates)
+    const decoratedRates = decorateRates(rates || [])
 
     return (
         <View style={styles.container}>
@@ -43,17 +38,28 @@ const Dashboard = () => {
                 style={{ flex: 1, marginTop: 15 }}
                 refreshControl={
                     <RefreshControl
-                        refreshing={isRefreshing}
+                        refreshing={isRefreshing || isLoading}
                         onRefresh={handleOnRefresh}
                     />
                 }>
-                {/* Display rates here */}
+                <SectionList data={decoratedRates} />
             </ScrollView>
         </View>
     )
 }
 
 export default Dashboard
+
+const decorateRates = ratesObject => {
+    const decoratedRates = []
+    decoratedRates.push({name: null, value: null, increased: null})
+    for (const [name, obj] of Object.entries(ratesObject)) {
+      const [value, increased] = Object.values(obj)
+      decoratedRates.push({ name, value, increased })
+    }
+  
+    return decoratedRates
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -68,13 +74,3 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 })
-
-// const { data, isError, isFetching, isLoading } = useGetProductsQuery()
-// console.log(data, isError, isFetching, isLoading)
-
-// const state = useSelector(state => state)
-// console.log(state)
-
-// import { useGetProductsQuery } from '../../redux/api'
-// import { useSelector } from 'react-redux'
-// import { AuthContext } from '../../context/auth-context'
