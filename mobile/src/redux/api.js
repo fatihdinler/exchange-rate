@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { API_KEYS } from '../shared/constants/config'
 import { user } from './services/user'
-import { getExchangeRates } from './services/exchange-rate'
+import { getRates } from './services/exchange-rate'
 
 export const api = createApi({
     reducerPath: 'api',
@@ -10,10 +10,10 @@ export const api = createApi({
         getUser: builder.query({
             query: (id) => user(id)
         }),
-        getExchangeRates: builder.query({
-            query: () => getExchangeRates()
+        getRates: builder.query({
+            query: () => getRates()
         })
     })
 })
 
-export const { useGetProductsQuery, useGetUserQuery, useGetExchangeRatesQuery } = api
+export const { useGetProductsQuery, useGetUserQuery, useGetRatesQuery } = api

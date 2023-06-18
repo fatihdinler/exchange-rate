@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, ScrollView } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../../context/auth-context'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useGetUserQuery } from '../../redux/api'
+import Toolbar from '../../components/toolbar/toolbar'
 
 const Profile = () => {
   const { logOut } = useContext(AuthContext)
@@ -13,40 +14,18 @@ const Profile = () => {
   }, [])
 
   const { data: user, isError, error } = useGetUserQuery(userId)
-
-  console.log(userId)
-  console.log(user)
-
+  
   return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Profile</Text>
-        <View style={styles.infoContainer}>
-          <View style={styles.field}>
-            <Text style={styles.label}>Username:</Text>
-            <Text style={styles.text}>{user?.user.username}</Text>
-          </View>
-          <View style={styles.field}>
-            <Text style={styles.label}>Email:</Text>
-            <Text style={styles.text}>{user?.user.email}</Text>
-          </View>
-          <View style={styles.field}>
-            <Text style={styles.label}>First Name:</Text>
-            <Text style={styles.text}>{user?.user.firstname}</Text>
-          </View>
-          <View style={styles.field}>
-            <Text style={styles.label}>Last Name:</Text>
-            <Text style={styles.text}>{user?.user.lastname}</Text>
-          </View>
-          <View style={styles.field}>
-            <Text style={styles.label}>Language:</Text>
-            <Text style={styles.text}>{user?.user.language}</Text>
-          </View>
-        </View>
-        <Button
-          title='Çık'
-          onPress={() => logOut()}
-        />
+    <View style={styles.container}>
+      <View style={styles.toolbar}>
+        <Toolbar screenName='Profil' />
       </View>
+      <Button
+        title='Çık'
+        onPress={() => logOut()}
+      />
+      <ScrollView style={{ flex: 1, marginTop: 15 }}></ScrollView>
+    </View>
   )
 }
 
@@ -65,31 +44,13 @@ const getRefreshToken = async setState => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
-    paddingVertical: height * 0.05,
-    paddingHorizontal: width * 0.05,
+    margin: 20,
   },
-  title: {
-    fontSize: width * 0.06,
-    fontWeight: 'bold',
-    marginBottom: height * 0.03,
-    color: '#333',
+  toolbar: {
+    flex: 1 / 7,
   },
-  infoContainer: {
-    backgroundColor: '#fff',
-    borderRadius: width * 0.03,
-    padding: width * 0.05,
-  },
-  field: {
-    marginBottom: height * 0.02,
-  },
-  label: {
-    fontSize: width * 0.04,
-    fontWeight: 'bold',
-    color: '#555',
-  },
-  text: {
-    fontSize: width * 0.04,
-    color: '#333',
+  searchbar: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })

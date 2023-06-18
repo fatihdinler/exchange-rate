@@ -1,27 +1,25 @@
 import { StyleSheet, Text, View, ScrollView, RefreshControl } from 'react-native'
-import React, { useState, useCallback } from 'react'
-import { useGetExchangeRatesQuery } from '../../redux/api'
+import React, { useState, useCallback, useEffect } from 'react'
+import { useGetRatesQuery } from '../../redux/api'
 import Searchbar from '../../components/searchbar/searchbar'
 import SearchbarButton from '../../components/searchbar/searchbar-button'
 import Toolbar from '../../components/toolbar/toolbar'
+import { useSelector } from 'react-redux'
+import SectionList from '../../components/list/section-list'
 
 const Dashboard = () => {
     const [searchText, setSearchText] = useState('')
-    const [refreshing, setRefreshing] = useState(false)
+    const { data: rates, isLoading, refetch } = useGetRatesQuery()
 
-    const {
-        data: exchangeRates,
-        isLoading: isExchangeRatesLoading,
-        isFetching: isExchangeRatesFetching,
-        isError: isExchangeRatesError,
-    } = useGetExchangeRatesQuery()
+    const [isRefreshing, setIsRefreshing] = useState(false)
 
-    console.log('exchangeRates -->', exchangeRates)
+    const handleOnRefresh = useCallback(async () => {
+        setIsRefreshing(true)
+        await refetch()
+        setIsRefreshing(false)
+    }, [refetch])
 
-    const handleOnRefresh = useCallback( () => {
-        setRefreshing(true) // When it starts.
-        setRefreshing(false) // Use it when you want to stop refreshing.
-      }, [refreshing])
+    const decoratedRates = decorateRates(rates || [])
 
     return (
         <View style={styles.container}>
@@ -40,17 +38,31 @@ const Dashboard = () => {
                 style={{ flex: 1, marginTop: 15 }}
                 refreshControl={
                     <RefreshControl
-                        refreshing={refreshing}
+                        refreshing={isRefreshing || isLoading}
                         onRefresh={handleOnRefresh}
                     />
                 }>
-
-                </ScrollView>
+                <SectionList 
+                    data={decoratedRates} 
+                    searchText={searchText}
+                />
+            </ScrollView>
         </View>
     )
 }
 
 export default Dashboard
+
+const decorateRates = ratesObject => {
+    const decoratedRates = []
+    decoratedRates.push({name: null, value: null, increased: null})
+    for (const [name, obj] of Object.entries(ratesObject)) {
+      const [value, increased] = Object.values(obj)
+      decoratedRates.push({ name, value, increased })
+    }
+  
+    return decoratedRates
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -64,15 +76,4 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    
 })
-
-// const { data, isError, isFetching, isLoading } = useGetProductsQuery()
-// console.log(data, isError, isFetching, isLoading)
-
-// const state = useSelector(state => state)
-// console.log(state)
-
-// import { useGetProductsQuery } from '../../redux/api'
-// import { useSelector } from 'react-redux'
-// import { AuthContext } from '../../context/auth-context'

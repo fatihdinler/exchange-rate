@@ -71,3 +71,23 @@ export const SearchIcon = ({ color, size }) => {
         />
     )
 }
+
+export const ArrowUp = ({ color, size }) => {
+    return (
+        <AntDesign
+            name="arrowup"
+            size={size}
+            color={color}
+        />
+    )
+}
+
+export const ArrowDown = ({ color, size }) => {
+    return (
+        <AntDesign
+            name="arrowdown"
+            size={size}
+            color={color}
+        />
+    )
+}
