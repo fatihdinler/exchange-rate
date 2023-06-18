@@ -42,7 +42,10 @@ const Dashboard = () => {
                         onRefresh={handleOnRefresh}
                     />
                 }>
-                <SectionList data={decoratedRates} />
+                <SectionList 
+                    data={decoratedRates} 
+                    searchText={searchText}
+                />
             </ScrollView>
         </View>
     )
