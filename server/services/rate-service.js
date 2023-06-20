@@ -1,4 +1,5 @@
 const { ExchangeRates } = require('../models')
+const CC = require('currency-converter-lt')
 
 const compareLastTwoRow = async () => {
   const lastTwoRates = await ExchangeRates.lastTwoRow('created_at', 'desc')
@@ -27,7 +28,7 @@ const calculationRates = (rate) => {
 
   for (const key in rate[1]) {
     const values = rate.map(item => parseFloat(item[key]))
-    const maxValue = Math.max(...values)
+    const maxValue = Math.max(...values) //TODO max value aynı ise ne yapacağına bak. Bir enum tip belirlenebilir. Arttı, Azaldı, Değişmedi gibi.....
     const maxIndex = values.indexOf(maxValue)
 
     result[key] = [maxValue, (maxIndex === 0)]
@@ -35,5 +36,10 @@ const calculationRates = (rate) => {
   return result
 }
 
+const currencyConverter = (fromMoneyType, toMoneyType, targetAmount) => {
+  let changedData = new CC({ from: fromMoneyType, to: toMoneyType, amount: targetAmount })
+  return changedData.convert()
+}
 
-module.exports = { allRateSaveToDataBase, compareLastTwoRow }
+
+module.exports = { allRateSaveToDataBase, compareLastTwoRow, currencyConverter }

@@ -20,23 +20,19 @@ const signUp = async (req, res, next) => {
     }))
   }
   const user = await userServices.createUser(req.body)
-
   const tokens = await tokenService.generateAuthTokens(user)
   res.send({ user, tokens })
 }
 
 const getUser = async (req, res, next) => {
-  console.log("girdi ")
   const user = await userServices.getUserById(req.params.id)
 
   if (!user) {
-    console.log("user bulunamadı")
     return next(createError({
-      status: NOT_FOUND, // TODOOOOOO
+      status: NOT_FOUND,
       message: "User not found!",
     }))
   }
-  console.log("user bulundu")
   res.send({ user })
 }
 
