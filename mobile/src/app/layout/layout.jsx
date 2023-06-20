@@ -9,7 +9,7 @@ import Loading from '../../components/loading/loading'
 
 const Layout = () => {
   const { userToken } = useContext(AuthContext)
-
+  console.log('userToken _----->', userToken)
   return <NavigationContainer>{userToken ? <TabNavigator /> : <LoginStack />}</NavigationContainer>
 }
 

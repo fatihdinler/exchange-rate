@@ -1,33 +1,79 @@
-import { Button, StyleSheet, Text, View, SafeAreaView } from 'react-native'
-import React, {useContext} from 'react'
-import { useGetProductsQuery } from '../../redux/api'
+import { StyleSheet, Text, View, ScrollView, RefreshControl } from 'react-native'
+import React, { useState, useCallback, useEffect } from 'react'
+import { useGetRatesQuery } from '../../redux/api'
+import Searchbar from '../../components/searchbar/searchbar'
+import SearchbarButton from '../../components/searchbar/searchbar-button'
+import Toolbar from '../../components/toolbar/toolbar'
 import { useSelector } from 'react-redux'
-import { AuthContext } from '../../context/auth-context'
 import SectionList from '../../components/list/section-list'
 
 const Dashboard = () => {
+    const [searchText, setSearchText] = useState('')
+    const { data: rates, isLoading, refetch } = useGetRatesQuery()
 
-  // const { data, isError, isFetching, isLoading } = useGetProductsQuery()
-  // console.log(data, isError, isFetching, isLoading)
+    const [isRefreshing, setIsRefreshing] = useState(false)
 
-  // const state = useSelector(state => state)
-  // console.log(state)
+    const handleOnRefresh = useCallback(async () => {
+        setIsRefreshing(true)
+        await refetch()
+        setIsRefreshing(false)
+    }, [refetch])
 
-  const { logOut } = useContext(AuthContext)
-  
-  return (
-    <SafeAreaView>
-      <SectionList />
-    </SafeAreaView>
-  )
+    const decoratedRates = decorateRates(rates || [])
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.toolbar}>
+                <Toolbar screenName='Ana Sayfa' />
+            </View>
+            <View style={styles.searchbar}>
+                <Searchbar
+                    value={searchText}
+                    onChangeText={text => setSearchText(text)}
+                    placeholder='Bir para birimi arayın'
+                />
+                <SearchbarButton />
+            </View>
+            <ScrollView
+                style={{ flex: 1, marginTop: 15 }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing || isLoading}
+                        onRefresh={handleOnRefresh}
+                    />
+                }>
+                <SectionList 
+                    data={decoratedRates} 
+                    searchText={searchText}
+                />
+            </ScrollView>
+        </View>
+    )
 }
 
 export default Dashboard
 
+const decorateRates = ratesObject => {
+    const decoratedRates = []
+    decoratedRates.push({name: null, value: null, increased: null})
+    for (const [name, obj] of Object.entries(ratesObject)) {
+      const [value, increased] = Object.values(obj)
+      decoratedRates.push({ name, value, increased })
+    }
+  
+    return decoratedRates
+}
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems:'center',
-  }
+    container: {
+        flex: 1,
+        margin: 20,
+    },
+    toolbar: {
+        flex: 1 / 7,
+    },
+    searchbar: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
 })

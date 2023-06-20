@@ -1,15 +1,24 @@
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native'
-import React from 'react'
-import Avatar from '../avatar/avatar'
+import React, {useState, useEffect} from 'react'
+import { useGetUserQuery } from '../../redux/api'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getHeight, getWidth } from '../../shared/constants/dimension'
 import { getGreetingMessage } from '../../shared/utils/greeting'
 import { LIGHT_THEME_COLORS } from '../../shared/constants/colors'
 
 const Toolbar = ({ screenName }) => {
-  const username = 'Fatih'
+
   const greetingMessage = getGreetingMessage()
   const WINDOW_WIDTH = getWidth()
   const WINDOW_HEIGHT = getHeight()
+  const [userId, setUserId] = useState(null)
+
+  useEffect(() => {
+    getRefreshToken(setUserId)
+  }, [])
+
+  const { data: user, isError, error } = useGetUserQuery(userId)
+  const username = user?.user.username || 'User'
   
   return (
     <View style={styles.container}>
@@ -22,17 +31,19 @@ const Toolbar = ({ screenName }) => {
         </View>
         <View style={styles.footer}>
           <Text style={styles.screenName}>{screenName}</Text>
-          <View style={styles.iconContainer}>
-            <Avatar
-              source={{
-                uri: 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-              }}
-            />
-          </View>
         </View>
       </View>
     </View>
   )
+}
+
+const getRefreshToken = async setState => {
+  await AsyncStorage.getItem('user')
+    .then(response => {
+      const parsedData = JSON.parse(response)
+      setState(parsedData.id)
+    })
+    .catch(err => console.log(err))
 }
 
 export default Toolbar
