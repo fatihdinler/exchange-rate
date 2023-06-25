@@ -3,13 +3,13 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { HeartIcon, ArrowUp, ArrowDown } from '../../shared/constants/icons';
 import { getWidth } from '../../shared/constants/dimension';
 import axios from 'axios'
+import NotFoundAnimation from '../login-animation/not-found'
 
 const SectionList = ({ data, searchText }) => {
 
 	const filteredData = data.filter(item =>
 		item.name === null ? true : item.name.toLowerCase().includes(searchText.toLowerCase())
 	)
-	console.log(filteredData)
 
 	return (
 		<View style={styles.container}>
@@ -43,8 +43,9 @@ const SectionList = ({ data, searchText }) => {
 							)}
 						</TouchableOpacity>
 					</View>) : (
-					<View>
-						<Text>No Item is found</Text>
+					<View style={{flex: 1, alignItems: 'center', marginTop: 75}}>
+						<NotFoundAnimation />
+						<Text style={{ fontSize: getWidth() * 0.04, fontWeight: 'bold', marginTop: 25 }}>Aradığınız Para Birimi Bulunamadı !</Text>
 					</View>
 				)
 

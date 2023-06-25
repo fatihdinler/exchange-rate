@@ -1,6 +1,8 @@
 import { AntDesign } from '@expo/vector-icons'
 import { Ionicons } from '@expo/vector-icons'
 import { EvilIcons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
+import { Entypo } from '@expo/vector-icons'
 
 export const DashboardIcon = ({ color, size }) => {
     return (
@@ -86,6 +88,86 @@ export const ArrowDown = ({ color, size }) => {
     return (
         <AntDesign
             name="arrowdown"
+            size={size}
+            color={color}
+        />
+    )
+}
+
+export const EmailIcon = ({ color, size }) => {
+    return (
+        <MaterialIcons
+            name="email"
+            size={size}
+            color={color}
+        />
+    )
+}
+
+export const LocationIcon = ({ color, size }) => {
+    return (
+        <MaterialIcons
+            name="language"
+            size={size}
+            color={color}
+        />
+    )
+}
+
+export const LanguageIcon = ({ color, size }) => {
+    return (
+        <Ionicons
+            name="ios-language-sharp"
+            size={size}
+            color={color}
+        />
+    )
+}
+
+export const FavouriteIcon = ({ color, size }) => {
+    return (
+        <MaterialIcons
+            name="favorite"
+            size={size}
+            color={color}
+        />
+    )
+}
+
+export const ShareIcon = ({ color, size }) => {
+    return (
+        <Entypo
+            name="share"
+            size={size}
+            color={color}
+        />
+    )
+}
+
+export const ContactIcon = ({ color, size }) => {
+    return (
+        <MaterialIcons
+            name="support-agent"
+            size={size}
+            color={color}
+        />
+    )
+}
+
+export const LogoutIcon = ({ color, size }) => {
+    return (
+        <MaterialIcons
+            name="logout"
+            size={size}
+            color={color}
+        />
+    )
+}
+
+export const NextIcon = ({ color, size }) => {
+    return (
+        <MaterialIcons
+            name="navigate-next"
             size={size}
             color={color}
         />

@@ -6,6 +6,7 @@ export const LIGHT_THEME_COLORS = {
     GRAY3: '#E1E8ED',
     GRAY4: '#F5F8FA',
     WHITE: '#FFFFFF',
+    GREEN: '#229954',
 }
 
 export const DARK_THEME_COLORS = {

@@ -9,7 +9,8 @@ const Favourites = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.toolbar}>
+           <View style={styles.layoutContainer}>
+           <View style={styles.toolbar}>
                 <Toolbar screenName='Favoriler' />
             </View>
             <View style={styles.searchbar}>
@@ -21,6 +22,7 @@ const Favourites = () => {
                 <SearchbarButton />
             </View>
             <ScrollView style={{ flex: 1, marginTop: 15 }}></ScrollView>
+           </View>
         </View>
     )
 }
@@ -29,6 +31,10 @@ export default Favourites
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+        backgroundColor: 'white'
+    },
+    layoutContainer: {
         flex: 1,
         margin: 20,
     },
