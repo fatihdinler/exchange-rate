@@ -6,6 +6,7 @@ import DashboardStack from '../stack/dashboard-stack'
 import ProfileStack from '../stack/profile-stack'
 import FavouritesStack from '../stack/favourites-stack'
 import { DashboardIcon, ProfileIcon, HeartIcon } from '../../shared/constants/icons'
+
 const TabNavigator = () => {
 
   const Tabs = createBottomTabNavigator()
