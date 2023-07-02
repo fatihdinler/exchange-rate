@@ -53,7 +53,10 @@ export const AuthProvider = ({ children }) => {
                 if(error.message === 'Network Error') {
                     Alert.alert('Network Error!', 'Could not connect to server.')
                 }
-                console.log(error)
+                else if(error.response.status === 400) {
+                    Alert.alert('User not found!', `There is no user as ${username}`)
+                }
+                console.log('errpr', error)
             })
     }
 

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
-import { HeartIcon, ArrowUp, ArrowDown } from '../../shared/constants/icons';
-import { getWidth } from '../../shared/constants/dimension';
-import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import { HeartIcon, ArrowUp, ArrowDown } from '../../shared/constants/icons'
+import { getHeight, getWidth } from '../../shared/constants/dimension'
 import NotFoundAnimation from '../login-animation/not-found'
+import { Divider } from 'native-base'
 
 const SectionList = ({ data, searchText }) => {
 
@@ -11,41 +11,46 @@ const SectionList = ({ data, searchText }) => {
 		item.name === null ? true : item.name.toLowerCase().includes(searchText.toLowerCase())
 	)
 
+	console.log(filteredData)
+
 	return (
-		<View style={styles.container}>
+		<View className='flex-1 bg-white'>
 			{filteredData.map((item, index) => (
 				filteredData.length > 1 ? (
-					<View style={{ flexDirection: 'row', marginBottom: 15, alignItems: 'center' }}>
-						<View style={{ flex: 1 / 4, alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }}>
-							<Text style={[{ fontSize: getWidth() * 0.04, }, index === 0 ? { fontWeight: 'bold' } : { fontWeight: '300' }]}>
-								{index === 0 ? 'Birim' : item.name}
-							</Text>
+					<View className='flex-1 flex-col items-center' key={item.name}>
+						<View className='flex-1 flex-row items-center pt-3 pb-3 justify-center'>
+							<View className='items-center flex-row justify-center flex-1'>
+								<Text className={index === 0 ? 'text-xl font-extrabold text-neutral-500' : 'text-lg text-neutral-900'}>
+									{index === 0 ? 'Birim' : item.name}
+								</Text>
+							</View>
+							<View className='items-center flex-row justify-center flex-1'>
+								<Text className={index === 0 ? 'text-xl font-extrabold text-neutral-500' : 'text-lg text-neutral-900'}>
+									{index === 0 ? 'Değer' : item.value.toFixed(2)}
+								</Text>
+							</View>
+							<View className='items-center flex-row justify-center flex-1'>
+								{index === 0 ? (
+									<Text className='text-xl font-extrabold text-neutral-500'>Artış</Text>
+								) : item.increased ? (
+									<ArrowUp size={getHeight() * 0.02} color="green" />
+								) : (
+									<ArrowDown size={getHeight() * 0.02} color="red" />
+								)}
+							</View>
+							<TouchableOpacity className='items-center flex-row justify-center flex-1'>
+								{index === 0 ? (
+									<Text className='text-xl font-extrabold text-neutral-500'>Favori</Text>
+								) : (
+									<HeartIcon size={getHeight() * 0.02} color="red" />
+								)}
+							</TouchableOpacity>
 						</View>
-						<View style={{ marginLeft: 10, flex: 1 / 4, alignItems: 'center', justifyContent: 'center' }}>
-							<Text style={[{ fontSize: getWidth() * 0.04 }, index === 0 ? { fontWeight: 'bold' } : { fontWeight: '300' }]}>
-								{index === 0 ? 'Değer' : item.value.toFixed(2)}
-							</Text>
-						</View>
-						<View style={{ marginLeft: 10, flex: 1 / 4, alignItems: 'center' }}>
-							{index === 0 ? (
-								<Text style={{ fontSize: getWidth() * 0.04, fontWeight: 'bold' }}>Artış</Text>
-							) : item.increased ? (
-								<ArrowUp size={getWidth() * 0.04} color="green" />
-							) : (
-								<ArrowDown size={getWidth() * 0.04} color="red" />
-							)}
-						</View>
-						<TouchableOpacity style={{ marginLeft: 10, flex: 1 / 4, alignItems: 'center' }}>
-							{index === 0 ? (
-								<Text style={{ fontSize: getWidth() * 0.04, fontWeight: 'bold' }}>Favori</Text>
-							) : (
-								<HeartIcon size={getWidth() * 0.04} color="red" />
-							)}
-						</TouchableOpacity>
+						<Divider />
 					</View>) : (
-					<View style={{flex: 1, alignItems: 'center', marginTop: 75}}>
+					<View className='flex-1 items-center justify-center' style={{ marginTop: getHeight() / 6 }}>
 						<NotFoundAnimation />
-						<Text style={{ fontSize: getWidth() * 0.04, fontWeight: 'bold', marginTop: 25 }}>Aradığınız Para Birimi Bulunamadı !</Text>
+						<Text className='text-xl font-bold text-center pt-4'>Aradığınız Para Birimi Bulunamadı !</Text>
 					</View>
 				)
 
@@ -54,10 +59,4 @@ const SectionList = ({ data, searchText }) => {
 	)
 }
 
-export default SectionList;
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-});
+export default SectionList
