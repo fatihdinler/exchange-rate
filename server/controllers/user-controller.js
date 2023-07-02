@@ -1,7 +1,7 @@
 const { User } = require('../models')
 const userServices = require("../services/user-service")
 const tokenService = require("../services/token-service")
-const { createError, CONFLICT, NOT_FOUND, BAD_REQUEST } = require('../helper/error')
+const { createError, NOT_FOUND, BAD_REQUEST } = require('../helper/error')
 
 const signUp = async (req, res, next) => {
   let error = []
@@ -10,7 +10,7 @@ const signUp = async (req, res, next) => {
   if (req.body.username && existUser?.username === req.body.username) {
     error.push('Username already exists')
   } else if (req.body.email && existUser?.email === req.body.email) {
-    error.push('Email already exists')
+    error.push('Email already exists')  // TODO create error'a eklenen mesajları doğru ekle bad request düzenlemelerini bunlara da yap
   }
 
   if (error.length > 0) {
