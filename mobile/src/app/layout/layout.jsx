@@ -4,8 +4,9 @@ import { NavigationContainer } from '@react-navigation/native'
 import TabNavigator from '../../navigation/tab/tab-navigator'
 import LoginStack from '../../navigation/stack/login-stack'
 import { AuthContext } from '../../context/auth-context'
-import { useSelector } from 'react-redux'
-import Loading from '../../components/loading/loading'
+import * as SplashScreen from 'expo-splash-screen'
+
+// SplashScreen.preventAutoHideAsync()
 
 const Layout = () => {
   const { userToken } = useContext(AuthContext)
