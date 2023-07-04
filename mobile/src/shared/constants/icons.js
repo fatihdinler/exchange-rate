@@ -173,3 +173,13 @@ export const NextIcon = ({ color, size }) => {
         />
     )
 }
+
+export const ConverterIcon = ({ color, size }) => {
+    return (
+        <Ionicons
+            name="calculator-outline"
+            size={size}
+            color={color}
+        />
+    )
+}

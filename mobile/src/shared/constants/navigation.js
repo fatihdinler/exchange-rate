@@ -3,6 +3,7 @@ export const NAVIGATION_LITERALS = {
     DASHBOARD_STACK: 'dashboard-stack',
     PROFILE_STACK: 'profile-stack',
     FAVOURIES_STACK: 'favourites-stack',
+    CONVERTER_STACK: 'converter-stack',
     
     DASHBOARD: 'dashboard-screen',
     PROFILE: 'profile-screen',
@@ -10,4 +11,5 @@ export const NAVIGATION_LITERALS = {
     LOGIN: 'login-screen',
     REGISTER: 'register-screen',
     FAVOURIES: 'favourites-screen',
+    CONVERTER: 'converter-scrreen',
 }

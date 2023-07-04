@@ -5,7 +5,8 @@ import { NAVIGATION_LITERALS } from '../../shared/constants/navigation'
 import DashboardStack from '../stack/dashboard-stack'
 import ProfileStack from '../stack/profile-stack'
 import FavouritesStack from '../stack/favourites-stack'
-import { DashboardIcon, ProfileIcon, HeartIcon } from '../../shared/constants/icons'
+import ConverterStack from '../stack/converter-stack'
+import { DashboardIcon, ProfileIcon, HeartIcon, ConverterIcon } from '../../shared/constants/icons'
 
 const TabNavigator = () => {
 
@@ -38,6 +39,19 @@ const TabNavigator = () => {
           tabBarLabel: 'Favourites',
           tabBarIcon: ({ color, size }) => (
             <HeartIcon
+              color={color}
+              size={size}
+            />
+          )
+        }}
+      />
+      <Tabs.Screen
+        name={NAVIGATION_LITERALS.CONVERTER_STACK}
+        component={ConverterStack}
+        options={{
+          tabBarLabel: 'Converter',
+          tabBarIcon: ({ color, size }) => (
+            <ConverterIcon
               color={color}
               size={size}
             />
