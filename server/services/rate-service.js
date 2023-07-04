@@ -37,7 +37,7 @@ const calculationRates = (rate) => {
 }
 
 const currencyConverter = (fromMoneyType, toMoneyType, targetAmount) => {
-  let changedData = new CC({ from: fromMoneyType, to: toMoneyType, amount: targetAmount })
+  let changedData = new CC({ from: fromMoneyType, to: toMoneyType, amount: (targetAmount * 1) })
   return changedData.convert()
 }
 

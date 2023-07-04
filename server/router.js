@@ -19,6 +19,7 @@ const routes = [
   { method: 'patch', path: '/users/:id', controller: 'user', action: 'updateUser', validation: userValidations.updateUser },
 
   { method: 'get', path: '/rates', controller: 'rate', action: 'getLastRate', validation: '' },
+  { method: 'get', path: '/money-converter', controller: 'rate', action: 'moneyConverter', validation: '' },
 ]
 
 routes.forEach(route => {

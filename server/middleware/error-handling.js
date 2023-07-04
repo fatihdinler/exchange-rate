@@ -14,7 +14,7 @@ const unauthorized = (err, req, res, next) => {
   }
 
   res.status(UNAUTHORIZED).send({
-    ok: false,
+    success: false,
     message: err.message || 'Unauthorized',
     errors: [err]
   })
@@ -26,7 +26,7 @@ const forbidden = (err, req, res, next) => {
   }
 
   res.status(FORBIDDEN).send({
-    ok: false,
+    success: false,
     message: err.message || 'Forbidden',
     errors: [err]
   })
@@ -38,7 +38,7 @@ const conflict = (err, req, res, next) => {
   }
 
   res.status(CONFLICT).send({
-    ok: false,
+    success: false,
     message: err.message || 'Conflict',
     errors: [err]
   })
@@ -50,9 +50,9 @@ const badRequest = (err, req, res, next) => {
   }
 
   res.status(BAD_REQUEST).send({
-    ok: false,
+    success: false,
     message: err.message || 'Bad Request',
-    status: [err]
+    error: err
   })
 }
 
@@ -61,7 +61,7 @@ const unprocessable = (err, req, res, next) => {
     return next(err)
   }
   res.status(UNPROCESSABLE).send({
-    ok: false,
+    success: false,
     message: err.message || 'Unprocessable entity',
     errors: [err]
   })
@@ -73,14 +73,14 @@ const notFound = (err, req, res, next) => {
   }
 
   res.status(NOT_FOUND).send({
-    ok: false,
+    success: false,
     message: err.message || 'The requested resource could not be found'
   })
 }
 
 const genericError = (err, req, res, next) => {
   res.status(GENERIC_ERROR).send({
-    ok: false,
+    success: false,
     message: err.message || 'Internal server error',
     errors: [err]
   })
@@ -88,7 +88,7 @@ const genericError = (err, req, res, next) => {
 
 const catchall = (req, res, next) => {
   res.status(NOT_FOUND).send({
-    ok: false,
+    success: false,
     message: 'The requested resource could not be found'
   })
 }

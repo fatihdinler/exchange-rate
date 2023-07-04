@@ -1,8 +1,15 @@
 const createError = ({
   status = 500,
-  message = 'Something went wrong'
+  message = 'Something went wrong',
+  validationError = null
 }) => {
   const error = new Error(message)
+  if (validationError !== null) {
+    return {
+      status: status,
+      validationError: validationError
+    }
+  }
   error.status = status
   return error
 }
