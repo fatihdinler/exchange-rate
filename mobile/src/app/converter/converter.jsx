@@ -38,22 +38,16 @@ const Converter = () => {
   }, [])
 
   const handleFromChange = useCallback(item => {
-    setSelectedMoneyFrom(item)
+    setSelectedMoneyFrom(item);
     bottomSheetRefForMoneyFrom.current?.collapse()
     bottomSheetRefForMoneyFrom.current?.close()
-    if (selectedMoneyFrom && selectedMoneyTo && amount) {
-      getMoneyConverter({ moneyFrom: selectedMoneyFrom, moneyTo: selectedMoneyTo, amount: amount })
-    }
-  }, [])
-
+  }, []);
+  
   const handleToChange = useCallback(item => {
-    setSelectedMoneyTo(item)
+    setSelectedMoneyTo(item);
     bottomSheetRefForMoneyTo.current?.collapse()
     bottomSheetRefForMoneyTo.current?.close()
-    if (selectedMoneyFrom && selectedMoneyTo && amount) {
-      getMoneyConverter({ moneyFrom: selectedMoneyFrom, moneyTo: selectedMoneyTo, amount: amount })
-    }
-  }, [])
+  }, []);
 
   const handleOpenSheetForMoneyFrom = useCallback(() => {
     bottomSheetRefForMoneyFrom.current?.expand()
@@ -74,15 +68,18 @@ const Converter = () => {
 
   useEffect(() => {
     if (!selectedMoneyFrom) {
-      setSelectedMoneyFrom('TRY') 
+      setSelectedMoneyFrom('TRY');
     }
     if (!selectedMoneyTo) {
-      setSelectedMoneyTo('USD')
+      setSelectedMoneyTo('USD');
     }
+  }, []);
+  
+  useEffect(() => {
     if (selectedMoneyFrom && selectedMoneyTo && amount) {
-      getMoneyConverter({ moneyFrom: selectedMoneyFrom, moneyTo: selectedMoneyTo, amount: amount })
+      getMoneyConverter({ moneyFrom: selectedMoneyFrom, moneyTo: selectedMoneyTo, amount: amount });
     }
-  }, [])
+  }, [selectedMoneyFrom, selectedMoneyTo, amount]);
 
   return (
     <GestureHandlerRootView className='flex-1'>
