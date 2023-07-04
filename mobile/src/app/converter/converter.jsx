@@ -1,16 +1,18 @@
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Button, FlatList, Dimensions } from 'react-native'
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native'
-import { useGetRatesQuery, useGetMoneyConverterQuery, useLazyGetMoneyConverterQuery } from '../../redux/api'
+import { useGetRatesQuery, useLazyGetMoneyConverterQuery } from '../../redux/api'
 import { getGreetingMessage } from '../../shared/utils/greeting'
 import { GestureHandlerRootView, TextInput } from 'react-native-gesture-handler'
 import BottomSheet from '@gorhom/bottom-sheet'
 import { ChevronDown } from '../../shared/constants/icons'
 import { Spinner } from 'native-base'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 const Converter = () => {
   const [selectedMoneyFrom, setSelectedMoneyFrom] = useState('')
   const [selectedMoneyTo, setSelectedMoneyTo] = useState('')
   const [amount, setAmount] = useState(0)
-  const [calculatedValue, setCalculatedValue] = useState()
+  const [savedConversions, setSavedConversions] = useState([])
 
   const bottomSheetRefForMoneyFrom = useRef(null)
   const bottomSheetRefForMoneyTo = useRef(null)
@@ -38,16 +40,16 @@ const Converter = () => {
   }, [])
 
   const handleFromChange = useCallback(item => {
-    setSelectedMoneyFrom(item);
+    setSelectedMoneyFrom(item)
     bottomSheetRefForMoneyFrom.current?.collapse()
     bottomSheetRefForMoneyFrom.current?.close()
-  }, []);
-  
+  }, [])
+
   const handleToChange = useCallback(item => {
-    setSelectedMoneyTo(item);
+    setSelectedMoneyTo(item)
     bottomSheetRefForMoneyTo.current?.collapse()
     bottomSheetRefForMoneyTo.current?.close()
-  }, []);
+  }, [])
 
   const handleOpenSheetForMoneyFrom = useCallback(() => {
     bottomSheetRefForMoneyFrom.current?.expand()
@@ -58,28 +60,87 @@ const Converter = () => {
   }, [])
 
   const calculateRate = text => {
-    const newAmount = parseFloat(text) || 0; // Convert the text to a number, or 0 if it's not a valid number
-  setAmount(newAmount) 
+    const newAmount = parseFloat(text) || 0 // Convert the text to a number, or 0 if it's not a valid number
+    setAmount(newAmount)
     console.log(amount)
     if (selectedMoneyFrom && selectedMoneyTo && amount) {
       getMoneyConverter({ moneyFrom: selectedMoneyFrom, moneyTo: selectedMoneyTo, amount: amount })
     }
   }
 
+  const handleStarButtonClick = useCallback(async () => {
+    try {
+      const newConversion = {
+        selectedMoneyFrom,
+        selectedMoneyTo,
+        amount,
+      }
+      const updatedConversions = [...savedConversions, newConversion]
+      await AsyncStorage.setItem('conversions', JSON.stringify(updatedConversions))
+      setSavedConversions(updatedConversions)
+    } catch (error) {
+      console.log('Error storing conversion:', error)
+    }
+  }, [selectedMoneyFrom, selectedMoneyTo, amount, savedConversions])
+
+  const handleDeleteConversion = useCallback(
+    async index => {
+      try {
+        const updatedConversions = [...savedConversions]
+        updatedConversions.splice(index, 1)
+        await AsyncStorage.setItem('conversions', JSON.stringify(updatedConversions))
+        setSavedConversions(updatedConversions)
+      } catch (error) {
+        console.log('Error deleting conversion:', error)
+      }
+    },
+    [savedConversions],
+  )
+
   useEffect(() => {
+    // Defaulty
     if (!selectedMoneyFrom) {
-      setSelectedMoneyFrom('TRY');
+      setSelectedMoneyFrom('TRY')
     }
     if (!selectedMoneyTo) {
-      setSelectedMoneyTo('USD');
+      setSelectedMoneyTo('USD')
     }
-  }, []);
-  
+  }, [])
+
   useEffect(() => {
     if (selectedMoneyFrom && selectedMoneyTo && amount) {
-      getMoneyConverter({ moneyFrom: selectedMoneyFrom, moneyTo: selectedMoneyTo, amount: amount });
+      getMoneyConverter({ moneyFrom: selectedMoneyFrom, moneyTo: selectedMoneyTo, amount: amount })
     }
-  }, [selectedMoneyFrom, selectedMoneyTo, amount]);
+  }, [selectedMoneyFrom, selectedMoneyTo, amount])
+
+  useEffect(() => {
+    const fetchSavedConversions = async () => {
+      try {
+        const savedConversionsJson = await AsyncStorage.getItem('conversions')
+        if (savedConversionsJson) {
+          const savedConversionsArray = JSON.parse(savedConversionsJson)
+          setSavedConversions(savedConversionsArray)
+        }
+      } catch (error) {
+        console.log('Error retrieving conversions:', error)
+      }
+    }
+    fetchSavedConversions()
+  }, [])
+
+  const colors = [
+    'red',
+    'orange',
+    'yellow',
+    'amber',
+    'lime',
+    'green',
+    'emerald',
+    'teal',
+    'cyan'
+  ]
+
+  console.log(savedConversions)
 
   return (
     <GestureHandlerRootView className='flex-1'>
@@ -88,7 +149,10 @@ const Converter = () => {
           <Text className='font-light text-lg'>{getGreetingMessage()} Fatih!</Text>
           <Text className='font-semibold text-3xl'>Hesaplama</Text>
         </View>
-
+        <Button
+          title='Save'
+          onPress={handleStarButtonClick}
+        />
         <View className='bg-white mt-5 shadow-2xl rounded-xl'>
           <View className='flex-row p-3 items-center justify-between mx-3'>
             <TouchableOpacity
@@ -125,10 +189,43 @@ const Converter = () => {
               <Text
                 style={{ fontSize: 18 }}
                 className={!currentData?.convertedData || amount === 0 ? 'text-gray-400' : 'text-black'}>
-                { isFetching || isLoading ? <Spinner size='sm' /> : (!amount ? '0.00' : currentData?.convertedData) }
+                {isFetching || isLoading ? <Spinner size='sm' /> : !amount ? '0.00' : currentData?.convertedData}
               </Text>
             </View>
           </View>
+        </View>
+
+        <View className='mt-5 justify-between items-center flex-1'>
+          <FlatList
+            data={savedConversions}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => {
+              console.log(`bg-${colors[index]}-300`)
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    setSelectedMoneyFrom(item.selectedMoneyFrom)
+                    setSelectedMoneyTo(item.selectedMoneyTo)
+                    setAmount(item.amount.toString())
+                  }}
+                  onLongPress={() => handleDeleteConversion(index)}
+                  // className='m-1 bg-amber-500 rounded-xl'
+                  className={`m-1 bg-cyan-600 rounded-xl`}
+                  style={[
+                    {
+                      width: Dimensions.get('screen').width / 3.45,
+                      padding: 10,
+                      alignItems: 'center',
+                    },
+                  ]}>
+                  <Text>{item.selectedMoneyFrom}</Text>
+                  <Text>{item.selectedMoneyTo}</Text>
+                  <Text>{item.amount}</Text>
+                </TouchableOpacity>
+              )
+            }}
+            numColumns={3}
+          />
         </View>
 
         <BottomSheet
@@ -173,3 +270,4 @@ const Converter = () => {
 }
 
 export default Converter
+
