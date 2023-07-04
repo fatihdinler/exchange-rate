@@ -131,7 +131,6 @@ const handleShareButton = async () => {
       message: `Son borsa bilgilerini takip etmek için Exchange Rate'i arkadaşlarınız ile paylaşın !`,
       url: 'https://github.com/fatihdinler/exchange-rate',
     })
-    console.log(result)
   } catch (error) {
     Alert.alert(error.message)
   }

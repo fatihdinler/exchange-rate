@@ -12,10 +12,7 @@ const SectionList = ({ data, searchText }) => {
 		item.name === null ? true : item.name.toLowerCase().includes(searchText.toLowerCase())
 	)
 
-	console.log(filteredData)
-
 	const { colorScheme } = useColorScheme()
-	console.log(colorScheme)
 
 	return (
 		<View className='flex-1 bg-white'>

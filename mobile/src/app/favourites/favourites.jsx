@@ -8,17 +8,17 @@ import axios from 'axios'
 const Favourites = () => {
   const [searchText, setSearchText] = useState('')
 
-  useEffect(() => {
-    axios.get('http://localhost:3001/money-converter', {
-      params: {
-        moneyFrom: 'TRY',
-        moneyTo: 'USD',
-        amount: 100,
-      },
-    })
-    .then(response => console.log(response.data))
-    .catch(err => console.log(err))
-  }, [])
+  // useEffect(() => {
+  //   axios.get('http://localhost:3001/money-converter', {
+  //     params: {
+  //       moneyFrom: 'TRY',
+  //       moneyTo: 'USD',
+  //       amount: 100,
+  //     },
+  //   })
+  //   .then(response => console.log(response.data))
+  //   .catch(err => console.log(err))
+  // }, [])
 
   return (
     <View style={styles.container}>

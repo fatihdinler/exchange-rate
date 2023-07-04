@@ -4,5 +4,6 @@ export const API_KEYS = {
     LOGIN: 'login',
     REFRESH_TOKEN: 'refresh-token',
     USERS: 'users',
-    RATES: 'rates'
+    RATES: 'rates',
+    MONEY_CONVERTER: 'money-converter'
 }

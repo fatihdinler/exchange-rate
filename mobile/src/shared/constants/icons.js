@@ -183,3 +183,13 @@ export const ConverterIcon = ({ color, size }) => {
         />
     )
 }
+
+export const ChevronDown = ({ color, size }) => {
+    return (
+        <EvilIcons
+            name="chevron-down"
+            size={size}
+            color={color}
+        />
+    )
+}
