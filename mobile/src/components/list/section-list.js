@@ -4,6 +4,7 @@ import { HeartIcon, ArrowUp, ArrowDown } from '../../shared/constants/icons'
 import { getHeight, getWidth } from '../../shared/constants/dimension'
 import NotFoundAnimation from '../login-animation/not-found'
 import { Divider } from 'native-base'
+import { useColorScheme } from 'nativewind'
 
 const SectionList = ({ data, searchText }) => {
 
@@ -12,6 +13,9 @@ const SectionList = ({ data, searchText }) => {
 	)
 
 	console.log(filteredData)
+
+	const { colorScheme } = useColorScheme()
+	console.log(colorScheme)
 
 	return (
 		<View className='flex-1 bg-white'>

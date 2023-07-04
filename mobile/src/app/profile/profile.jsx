@@ -6,8 +6,8 @@ import { useGetUserQuery } from '../../redux/api'
 import Toolbar from '../../components/toolbar/toolbar'
 import { getHeight, getWidth } from '../../shared/constants/dimension'
 import { LIGHT_THEME_COLORS } from '../../shared/constants/colors'
-import { formatDate } from '../../shared/utils/date-helper'
 import { ContactIcon, EmailIcon, FavouriteIcon, LanguageIcon, LocationIcon, LogoutIcon, NextIcon, ShareIcon } from '../../shared/constants/icons'
+import { Switch } from '@rneui/themed'
 
 const Profile = () => {
   const { logOut } = useContext(AuthContext)
@@ -19,33 +19,6 @@ const Profile = () => {
 
   const { data: user, isError, error } = useGetUserQuery(userId)
   const userData = user?.user
-  console.log(userData)
-
-  const handleLogout = () => {
-    Alert.alert(
-      'Çıkış yapmak üzeresiniz',
-      'Çıkış yapmak istediğinize emin misiniz?',
-      [{
-          text: 'Hayır',
-          onPress: () => null,
-          style: 'cancel',
-        }, {
-          text: 'Çıkış Yap', onPress: () => logOut()
-        }
-      ])
-  }
-
-  const handleShareButton = async () => {
-    try {
-      const result = await Share.share({
-        message: `Son borsa bilgilerini takip etmek için Exchange Rate'i arkadaşlarınız ile paylaşın !`,
-        url: 'https://github.com/fatihdinler/exchange-rate',
-      })
-      console.log(result)
-    } catch (error) {
-      Alert.alert(error.message)
-    }
-  }
 
   return (
     <View style={styles.container}>
@@ -105,7 +78,9 @@ const Profile = () => {
                 />
                 <Text style={styles.bodyRowText}>26 adet favoriniz bulunuyor</Text>
               </View>
-              <TouchableOpacity style={[styles.bodyRowItem, { justifyContent: 'space-between' }]} onPress={handleShareButton}>
+              <TouchableOpacity
+                style={[styles.bodyRowItem, { justifyContent: 'space-between' }]}
+                onPress={handleShareButton}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <ShareIcon
                     color={LIGHT_THEME_COLORS.GREEN}
@@ -131,12 +106,14 @@ const Profile = () => {
                   size={getWidth() * 0.06}
                 />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.bodyRowItem} onPress={handleLogout}>
+              <TouchableOpacity
+                style={styles.bodyRowItem}
+                onPress={() => handleLogout(logOut)}>
                 <LogoutIcon
                   color='red'
                   size={getWidth() * 0.06}
                 />
-                <Text style={styles.bodyRowText}>Çıkış Yap</Text>
+                <Text className={`text-red-400`}>Çıkış Yap</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -146,13 +123,33 @@ const Profile = () => {
   )
 }
 
-{
-  /* <Button
-  title='Çık'
-  onPress={() => logOut()}
-/> */
-}
 export default Profile
+
+const handleShareButton = async () => {
+  try {
+    const result = await Share.share({
+      message: `Son borsa bilgilerini takip etmek için Exchange Rate'i arkadaşlarınız ile paylaşın !`,
+      url: 'https://github.com/fatihdinler/exchange-rate',
+    })
+    console.log(result)
+  } catch (error) {
+    Alert.alert(error.message)
+  }
+}
+
+const handleLogout = logOut => {
+  Alert.alert('Çıkış yapmak üzeresiniz', 'Çıkış yapmak istediğinize emin misiniz?', [
+    {
+      text: 'Hayır',
+      onPress: () => null,
+      style: 'cancel',
+    },
+    {
+      text: 'Çıkış Yap',
+      onPress: () => logOut(),
+    },
+  ])
+}
 
 const getRefreshToken = async setState => {
   await AsyncStorage.getItem('user')
