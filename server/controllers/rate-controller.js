@@ -1,6 +1,6 @@
 const rateService = require("../services/rate-service")
 const { createError, NOT_FOUND, BAD_REQUEST } = require('../helper/error')
-const convertRate = require('../money-types.json')
+const moneyTypes = require('../money-types.json')
 
 const getLastRate = async (req, res, next) => {
   const lastRate = await rateService.compareLastTwoRow()
@@ -35,11 +35,11 @@ const moneyConverter = async (req, res, next) => {
 const rateValidatons = (req) => {
   let validationErrors = []
 
-  if (!Object.keys(convertRate.symbols).includes(req.query.moneyFrom)) {
+  if (!Object.keys(moneyTypes.symbols).includes(req.query.moneyFrom)) {
     validationErrors.push({ message: "moneyFrom must be a include in money-types.json" })
   }
 
-  if (!Object.keys(convertRate.symbols).includes(req.query.moneyTo)) {
+  if (!Object.keys(moneyTypes.symbols).includes(req.query.moneyTo)) {
     validationErrors.push({ message: "moneyTo must be a include in money-types.json" })
   }
 
