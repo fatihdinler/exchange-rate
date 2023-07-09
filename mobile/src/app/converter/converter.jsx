@@ -1,54 +1,56 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Button, FlatList, Dimensions } from 'react-native'
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
+import { View, Text, SafeAreaView, TouchableOpacity, TextInput, Button, FlatList, Dimensions } from 'react-native'
 import { useGetRatesQuery, useLazyGetMoneyConverterQuery } from '../../redux/api'
 import { getGreetingMessage } from '../../shared/utils/greeting'
-import { GestureHandlerRootView, TextInput } from 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import BottomSheet from '@gorhom/bottom-sheet'
 import { ChevronDown } from '../../shared/constants/icons'
 import { Spinner } from 'native-base'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Converter = () => {
-  const [selectedMoneyFrom, setSelectedMoneyFrom] = useState('')
-  const [selectedMoneyTo, setSelectedMoneyTo] = useState('')
-  const [amount, setAmount] = useState(0)
+  const [selectedMoneyFrom, setSelectedMoneyFrom] = useState('TRY')
+  const [selectedMoneyTo, setSelectedMoneyTo] = useState('USD')
+  const [amount, setAmount] = useState('0')
   const [savedConversions, setSavedConversions] = useState([])
 
   const bottomSheetRefForMoneyFrom = useRef(null)
   const bottomSheetRefForMoneyTo = useRef(null)
 
-  const { currentData: rates } = useGetRatesQuery()
-  const [getMoneyConverter, { currentData, isError, isFetching, isLoading }] = useLazyGetMoneyConverterQuery()
+  const { data: rates } = useGetRatesQuery()
+  const [getMoneyConverter, { data: currentData, isError, isFetching, isLoading }] = useLazyGetMoneyConverterQuery()
 
-  console.log(currentData, isLoading, isFetching, isError)
+  const renderItem = useCallback(({ item, index }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          setSelectedMoneyFrom(item.selectedMoneyFrom)
+          setSelectedMoneyTo(item.selectedMoneyTo)
+          setAmount(item.amount.toString())
+        }}
+        onLongPress={() => handleDeleteConversion(index)}
+        style={{
+          backgroundColor: `rgb(0, ${index * 25}, 255)`,
+          width: Dimensions.get('screen').width / 3.45,
+          padding: 10,
+          alignItems: 'center',
+          borderRadius: 10,
+          margin: 4,
+        }}
+      >
+        <Text>{item.selectedMoneyFrom}</Text>
+        <Text>{item.selectedMoneyTo}</Text>
+        <Text>{item.amount}</Text>
+      </TouchableOpacity>
+    )
+  }, [handleDeleteConversion])
 
-  const moneyUnitsForFrom = useMemo(() => {
-    return rates ? Object.keys(rates).map(item => item) : []
-  }, [rates])
-
-  const moneyUnitsForTo = useMemo(() => {
-    const moneyUnitsFromWithoutSelected = moneyUnitsForFrom.filter(item => item !== selectedMoneyFrom)
-    return rates ? moneyUnitsFromWithoutSelected.map(item => item) : []
-  }, [rates, moneyUnitsForFrom, selectedMoneyFrom])
-
-  const handleSheetChangesForMoneyFrom = useCallback(index => {
+  const handleSheetChangesForMoneyFrom = useCallback((index) => {
     console.log('handleSheetChangesForMoneyFrom', index)
   }, [])
 
-  const handleSheetChangesForMoneyTo = useCallback(index => {
+  const handleSheetChangesForMoneyTo = useCallback((index) => {
     console.log('handleSheetChangesForMoneyTo', index)
-  }, [])
-
-  const handleFromChange = useCallback(item => {
-    setSelectedMoneyFrom(item)
-    bottomSheetRefForMoneyFrom.current?.collapse()
-    bottomSheetRefForMoneyFrom.current?.close()
-  }, [])
-
-  const handleToChange = useCallback(item => {
-    setSelectedMoneyTo(item)
-    bottomSheetRefForMoneyTo.current?.collapse()
-    bottomSheetRefForMoneyTo.current?.close()
   }, [])
 
   const handleOpenSheetForMoneyFrom = useCallback(() => {
@@ -59,14 +61,24 @@ const Converter = () => {
     bottomSheetRefForMoneyTo.current?.expand()
   }, [])
 
-  const calculateRate = text => {
-    const newAmount = parseFloat(text) || 0 // Convert the text to a number, or 0 if it's not a valid number
-    setAmount(newAmount)
-    console.log(amount)
-    if (selectedMoneyFrom && selectedMoneyTo && amount) {
-      getMoneyConverter({ moneyFrom: selectedMoneyFrom, moneyTo: selectedMoneyTo, amount: amount })
+  const moneyUnitsForFrom = useMemo(() => {
+    return rates ? Object.keys(rates).map(item => item) : []
+  }, [rates])
+
+  const moneyUnitsForTo = useMemo(() => {
+    return moneyUnitsForFrom.filter(item => item !== selectedMoneyFrom)
+  }, [moneyUnitsForFrom, selectedMoneyFrom])
+
+  const handleDeleteConversion = useCallback(async (index) => {
+    try {
+      const updatedConversions = [...savedConversions]
+      updatedConversions.splice(index, 1)
+      await AsyncStorage.setItem('conversions', JSON.stringify(updatedConversions))
+      setSavedConversions(updatedConversions)
+    } catch (error) {
+      console.log('Error deleting conversion:', error)
     }
-  }
+  }, [savedConversions])
 
   const handleStarButtonClick = useCallback(async () => {
     try {
@@ -83,91 +95,69 @@ const Converter = () => {
     }
   }, [selectedMoneyFrom, selectedMoneyTo, amount, savedConversions])
 
-  const handleDeleteConversion = useCallback(
-    async index => {
-      try {
-        const updatedConversions = [...savedConversions]
-        updatedConversions.splice(index, 1)
-        await AsyncStorage.setItem('conversions', JSON.stringify(updatedConversions))
-        setSavedConversions(updatedConversions)
-      } catch (error) {
-        console.log('Error deleting conversion:', error)
-      }
-    },
-    [savedConversions],
-  )
+  const handleFromChange = useCallback((item) => {
+    setSelectedMoneyFrom(item)
+    bottomSheetRefForMoneyFrom.current?.collapse()
+    bottomSheetRefForMoneyFrom.current?.close()
+  }, [])
 
-  useEffect(() => {
-    // Defaulty
-    if (!selectedMoneyFrom) {
-      setSelectedMoneyFrom('TRY')
-    }
-    if (!selectedMoneyTo) {
-      setSelectedMoneyTo('USD')
-    }
+  const handleToChange = useCallback((item) => {
+    setSelectedMoneyTo(item)
+    bottomSheetRefForMoneyTo.current?.collapse()
+    bottomSheetRefForMoneyTo.current?.close()
   }, [])
 
   useEffect(() => {
-    if (selectedMoneyFrom && selectedMoneyTo && amount) {
-      getMoneyConverter({ moneyFrom: selectedMoneyFrom, moneyTo: selectedMoneyTo, amount: amount })
+    const fetchData = () => {
+      if (selectedMoneyFrom && selectedMoneyTo && amount !== '0') {
+        getMoneyConverter({ moneyFrom: selectedMoneyFrom, moneyTo: selectedMoneyTo, amount: parseFloat(amount) })
+      }
     }
-  }, [selectedMoneyFrom, selectedMoneyTo, amount])
+    const timeoutId = setTimeout(fetchData, 500)
+    return () => clearTimeout(timeoutId)
+  }, [amount, getMoneyConverter, selectedMoneyFrom, selectedMoneyTo])
 
   useEffect(() => {
-    const fetchSavedConversions = async () => {
+    const fetchDefaultConversion = async () => {
       try {
+        const defaultConversion = {
+          selectedMoneyFrom: 'TRY',
+          selectedMoneyTo: 'USD',
+          amount: '0',
+        }
         const savedConversionsJson = await AsyncStorage.getItem('conversions')
         if (savedConversionsJson) {
           const savedConversionsArray = JSON.parse(savedConversionsJson)
           setSavedConversions(savedConversionsArray)
+        } else {
+          setSavedConversions([defaultConversion])
+          await AsyncStorage.setItem('conversions', JSON.stringify([defaultConversion]))
         }
       } catch (error) {
         console.log('Error retrieving conversions:', error)
       }
     }
-    fetchSavedConversions()
+    fetchDefaultConversion()
   }, [])
 
-  const colors = [
-    'red',
-    'orange',
-    'yellow',
-    'amber',
-    'lime',
-    'green',
-    'emerald',
-    'teal',
-    'cyan'
-  ]
-
-  console.log(savedConversions)
-
   return (
-    <GestureHandlerRootView className='flex-1'>
-      <SafeAreaView className='flex-1 mt-3 ml-3 mr-3'>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, marginTop: 3, marginLeft: 3, marginRight: 3 }}>
         <View>
-          <Text className='font-light text-lg'>{getGreetingMessage()} Fatih!</Text>
-          <Text className='font-semibold text-3xl'>Hesaplama</Text>
+          <Text style={{ fontWeight: '300', fontSize: 18 }}>{getGreetingMessage()} Fatih!</Text>
+          <Text style={{ fontWeight: '600', fontSize: 28 }}>Hesaplama</Text>
         </View>
-        <Button
-          title='Save'
-          onPress={handleStarButtonClick}
-        />
-        <View className='bg-white mt-5 shadow-2xl rounded-xl'>
-          <View className='flex-row p-3 items-center justify-between mx-3'>
-            <TouchableOpacity
-              className='flex-row items-center flex-1'
-              onPress={handleOpenSheetForMoneyFrom}>
-              <Text className='text-lg mr-2'>{selectedMoneyFrom}</Text>
-              <ChevronDown
-                size={30}
-                color={'black'}
-              />
+        <Button title='Save' onPress={handleStarButtonClick} />
+        <View style={{ backgroundColor: 'white', marginTop: 5, elevation: 8, borderRadius: 10 }}>
+          <View style={{ flexDirection: 'row', padding: 10, alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 10 }}>
+            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }} onPress={handleOpenSheetForMoneyFrom}>
+              <Text style={{ fontSize: 16, marginRight: 4 }}>{selectedMoneyFrom}</Text>
+              <ChevronDown size={30} color={'black'} />
             </TouchableOpacity>
-            <View className='p-3 flex-1 items-end'>
+            <View style={{ padding: 10, flex: 1, alignItems: 'flex-end' }}>
               <TextInput
                 value={amount}
-                onChangeText={text => calculateRate(text)}
+                onChangeText={text => setAmount(text)}
                 keyboardType='number-pad'
                 placeholder='0.00'
                 style={{ fontSize: 18 }}
@@ -175,55 +165,25 @@ const Converter = () => {
             </View>
           </View>
 
-          <View className='flex-row p-3 items-center justify-between mx-3'>
-            <TouchableOpacity
-              onPress={handleOpenSheetForMoneyTo}
-              className='flex-row items-center'>
-              <Text className='text-lg mr-2'>{selectedMoneyTo}</Text>
-              <ChevronDown
-                size={30}
-                color={'black'}
-              />
+          <View style={{ flexDirection: 'row', padding: 10, alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 10 }}>
+            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={handleOpenSheetForMoneyTo}>
+              <Text style={{ fontSize: 16, marginRight: 4 }}>{selectedMoneyTo}</Text>
+              <ChevronDown size={30} color={'black'} />
             </TouchableOpacity>
-            <View className='p-3'>
-              <Text
-                style={{ fontSize: 18 }}
-                className={!currentData?.convertedData || amount === 0 ? 'text-gray-400' : 'text-black'}>
-                {isFetching || isLoading ? <Spinner size='sm' /> : !amount ? '0.00' : currentData?.convertedData}
+
+            <View style={{ padding: 10 }}>
+              <Text style={{ fontSize: 18, color: !currentData?.convertedData || amount === '0' ? '#888' : 'black' }}>
+                {isFetching || isLoading ? <Spinner size='small' color='black' /> : currentData?.convertedData || '0.00'}
               </Text>
             </View>
           </View>
         </View>
 
-        <View className='mt-5 justify-between items-center flex-1'>
+        <View style={{ marginTop: 5, flex: 1 }}>
           <FlatList
             data={savedConversions}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => {
-              console.log(`bg-${colors[index]}-300`)
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    setSelectedMoneyFrom(item.selectedMoneyFrom)
-                    setSelectedMoneyTo(item.selectedMoneyTo)
-                    setAmount(item.amount.toString())
-                  }}
-                  onLongPress={() => handleDeleteConversion(index)}
-                  // className='m-1 bg-amber-500 rounded-xl'
-                  className={`m-1 bg-cyan-600 rounded-xl`}
-                  style={[
-                    {
-                      width: Dimensions.get('screen').width / 3.45,
-                      padding: 10,
-                      alignItems: 'center',
-                    },
-                  ]}>
-                  <Text>{item.selectedMoneyFrom}</Text>
-                  <Text>{item.selectedMoneyTo}</Text>
-                  <Text>{item.amount}</Text>
-                </TouchableOpacity>
-              )
-            }}
+            keyExtractor={(item, index) => `conversion_${index}`}
+            renderItem={renderItem}
             numColumns={3}
           />
         </View>
@@ -233,17 +193,20 @@ const Converter = () => {
           index={-1}
           snapPoints={['70%']}
           onChange={handleSheetChangesForMoneyFrom}
-          enablePanDownToClose={true}>
-          <ScrollView className='p-3'>
-            {moneyUnitsForFrom?.map((item, index) => (
+          enablePanDownToClose={true}
+        >
+          <FlatList
+            data={moneyUnitsForFrom}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
               <TouchableOpacity
-                key={item}
                 onPress={() => handleFromChange(item)}
-                style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#CCC' }}>
+                style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#CCC' }}
+              >
                 <Text style={{ color: '#333' }}>{item}</Text>
               </TouchableOpacity>
-            ))}
-          </ScrollView>
+            )}
+          />
         </BottomSheet>
 
         <BottomSheet
@@ -251,18 +214,20 @@ const Converter = () => {
           index={-1}
           snapPoints={['60%']}
           onChange={handleSheetChangesForMoneyTo}
-          enablePanDownToClose={true}>
-          <ScrollView className='p-3'>
-            {moneyUnitsForTo.map((item, index) => (
+          enablePanDownToClose={true}
+        >
+          <FlatList
+            data={moneyUnitsForTo}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
               <TouchableOpacity
-                key={item}
                 onPress={() => handleToChange(item)}
-                className={`p-3`}
-                style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#CCC' }}>
-                <Text className={``}>{item}</Text>
+                style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#CCC' }}
+              >
+                <Text>{item}</Text>
               </TouchableOpacity>
-            ))}
-          </ScrollView>
+            )}
+          />
         </BottomSheet>
       </SafeAreaView>
     </GestureHandlerRootView>
@@ -270,4 +235,3 @@ const Converter = () => {
 }
 
 export default Converter
-
