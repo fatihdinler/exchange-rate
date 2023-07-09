@@ -193,3 +193,33 @@ export const ChevronDown = ({ color, size }) => {
         />
     )
 }
+
+export const ChevronRight = ({ color, size }) => {
+    return (
+        <Entypo
+            name='chevron-small-right'
+            size={size}
+            color={color}
+        />
+    )
+}
+
+export const FavorityIcon = ({ color, size }) => {
+    return (
+        <MaterialIcons
+            name='favorite'
+            size={size}
+            color={color}
+        />
+    )
+}
+
+export const MoonIcon = ({ color, size }) => {
+    return (
+        <Entypo
+            name='moon'
+            size={size}
+            color={color}
+        />
+    )
+}
