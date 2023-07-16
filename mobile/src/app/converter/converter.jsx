@@ -7,6 +7,7 @@ import BottomSheet from '@gorhom/bottom-sheet'
 import { ChevronDown } from '../../shared/constants/icons'
 import { Spinner } from 'native-base'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { styles } from './converter.style'
 
 const Converter = () => {
   const [selectedMoneyFrom, setSelectedMoneyFrom] = useState('TRY')
@@ -29,14 +30,8 @@ const Converter = () => {
           setAmount(item.amount.toString())
         }}
         onLongPress={() => handleDeleteConversion(index)}
-        style={{
-          backgroundColor: `rgb(0, ${index * 25}, 255)`,
-          width: Dimensions.get('screen').width / 3.45,
-          padding: 10,
-          alignItems: 'center',
-          borderRadius: 10,
-          margin: 4,
-        }}
+        className='shadow'
+        style={styles.itemContainer}
       >
         <Text>{item.selectedMoneyFrom}</Text>
         <Text>{item.selectedMoneyTo}</Text>
@@ -141,20 +136,20 @@ const Converter = () => {
   }, [])
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={{ flex: 1, marginTop: 3, marginLeft: 3, marginRight: 3 }}>
+    <GestureHandlerRootView style={styles.rootView}>
+      <SafeAreaView style={styles.safeView}>
         <View>
-          <Text style={{ fontWeight: '300', fontSize: 18 }}>{getGreetingMessage()} Fatih!</Text>
-          <Text style={{ fontWeight: '600', fontSize: 28 }}>Hesaplama</Text>
+          <Text style={styles.thinText}>{getGreetingMessage()} Fatih!</Text>
+          <Text style={styles.boldText}>Hesaplama</Text>
         </View>
         <Button title='Save' onPress={handleStarButtonClick} />
-        <View style={{ backgroundColor: 'white', marginTop: 5, elevation: 8, borderRadius: 10 }}>
-          <View style={{ flexDirection: 'row', padding: 10, alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 10 }}>
-            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }} onPress={handleOpenSheetForMoneyFrom}>
-              <Text style={{ fontSize: 16, marginRight: 4 }}>{selectedMoneyFrom}</Text>
+        <View style={styles.converter}>
+          <View style={styles.converterItems}>
+            <TouchableOpacity style={styles.converterButton} onPress={handleOpenSheetForMoneyFrom}>
+              <Text style={styles.selectedMoneyFrom}>{selectedMoneyFrom}</Text>
               <ChevronDown size={30} color={'black'} />
             </TouchableOpacity>
-            <View style={{ padding: 10, flex: 1, alignItems: 'flex-end' }}>
+            <View style={styles.amountContainer}>
               <TextInput
                 value={amount}
                 onChangeText={text => setAmount(text)}
@@ -165,9 +160,9 @@ const Converter = () => {
             </View>
           </View>
 
-          <View style={{ flexDirection: 'row', padding: 10, alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 10 }}>
-            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={handleOpenSheetForMoneyTo}>
-              <Text style={{ fontSize: 16, marginRight: 4 }}>{selectedMoneyTo}</Text>
+          <View style={styles.selectedMoneyToContainer}>
+            <TouchableOpacity style={styles.selectedMoneyToButton} onPress={handleOpenSheetForMoneyTo}>
+              <Text style={styles.selectedMoneyToText}>{selectedMoneyTo}</Text>
               <ChevronDown size={30} color={'black'} />
             </TouchableOpacity>
 
@@ -179,7 +174,7 @@ const Converter = () => {
           </View>
         </View>
 
-        <View style={{ marginTop: 5, flex: 1 }}>
+        <View style={styles.savedConversionsContainer}>
           <FlatList
             data={savedConversions}
             keyExtractor={(item, index) => `conversion_${index}`}

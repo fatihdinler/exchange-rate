@@ -3,7 +3,6 @@ import React from 'react'
 import { Divider } from '@rneui/themed'
 
 const ProfileList = ({ items }) => {
-    console.log(items)
     return (
         <View>
             {  // TODO: Add a divider

@@ -13,8 +13,6 @@ export const AuthProvider = ({ children }) => {
     const refreshRoute = `${API_KEYS.API}/${API_KEYS.REFRESH_TOKEN}`
     const [userToken, setUserToken] = useState(null)
 
-    console.log(loginRoute)
-
     const isTokenExpired = async () => {
         const accessToken = await AsyncStorage.getItem('access-token')
         const parsedAccessToken = JSON.parse(accessToken)
@@ -33,11 +31,8 @@ export const AuthProvider = ({ children }) => {
             password: password
         }
 
-        console.log(data)
-
         axios.post(loginRoute, data)
             .then(response => {
-                console.log(response)
                 if(response?.data?.user) {
                     AsyncStorage.setItem('user', JSON.stringify(response?.data?.user))
                 }
@@ -56,7 +51,7 @@ export const AuthProvider = ({ children }) => {
                 else if(error.response.status === 400) {
                     Alert.alert('User not found!', `There is no user as ${username}`)
                 }
-                console.log('errpr', error)
+                console.log('error', error)
             })
     }
 
