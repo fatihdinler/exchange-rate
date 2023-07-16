@@ -1,6 +1,6 @@
 const rateService = require("../services/rate-service")
 const { createError, NOT_FOUND, BAD_REQUEST } = require('../helper/error')
-const convertRate = require('../symbols.json')
+const moneyTypes = require('../money-types.json')
 
 const getLastRate = async (req, res, next) => {
   const lastRate = await rateService.compareLastTwoRow()
@@ -14,7 +14,7 @@ const getLastRate = async (req, res, next) => {
   res.send(lastRate)
 }
 
-const moneyConverter = async (req, res, next) => { // TODO bu kısım için queryler için validation eklemeyi unutma!!!! Genel error structure'ı da bir kontrol et!!!
+const moneyConverter = async (req, res, next) => {
   const validationErrors = rateValidatons(req)
 
   if (validationErrors.length > 0) return next(createError({ status: BAD_REQUEST, validationError: validationErrors }))
@@ -35,12 +35,12 @@ const moneyConverter = async (req, res, next) => { // TODO bu kısım için quer
 const rateValidatons = (req) => {
   let validationErrors = []
 
-  if (!Object.keys(convertRate.symbols).includes(req.query.moneyFrom)) {
-    validationErrors.push({ message: "moneyFrom must be a include in symbols.json" })
+  if (!Object.keys(moneyTypes.symbols).includes(req.query.moneyFrom)) {
+    validationErrors.push({ message: "moneyFrom must be a include in money-types.json" })
   }
 
-  if (!Object.keys(convertRate.symbols).includes(req.query.moneyTo)) {
-    validationErrors.push({ message: "moneyTo must be a include in symbols.json" })
+  if (!Object.keys(moneyTypes.symbols).includes(req.query.moneyTo)) {
+    validationErrors.push({ message: "moneyTo must be a include in money-types.json" })
   }
 
   return validationErrors
