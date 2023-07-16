@@ -8,15 +8,21 @@ import { ChevronDown } from '../../shared/constants/icons'
 import { Spinner } from 'native-base'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { styles } from './converter.style'
+import Toolbar from '../../components/toolbar/toolbar'
+import { getHeight } from '../../shared/constants/dimension'
+import { useGetUserQuery } from '../../redux/api'
+import { LIGHT_THEME_COLORS } from '../../shared/constants/colors'
 
 const Converter = () => {
   const [selectedMoneyFrom, setSelectedMoneyFrom] = useState('TRY')
   const [selectedMoneyTo, setSelectedMoneyTo] = useState('USD')
   const [amount, setAmount] = useState('0')
   const [savedConversions, setSavedConversions] = useState([])
+  const [userId, setUserId] = useState(null)
 
   const bottomSheetRefForMoneyFrom = useRef(null)
   const bottomSheetRefForMoneyTo = useRef(null)
+  const greetingMessage = getGreetingMessage()
 
   const { data: rates } = useGetRatesQuery()
   const [getMoneyConverter, { data: currentData, isError, isFetching, isLoading }] = useLazyGetMoneyConverterQuery()
@@ -135,14 +141,32 @@ const Converter = () => {
     fetchDefaultConversion()
   }, [])
 
+
+  useEffect(() => {
+    getRefreshToken(setUserId)
+  }, [])
+
+  const { data: user, error } = useGetUserQuery(userId)
+  const username = user?.user.username || 'User'
+
   return (
     <GestureHandlerRootView style={styles.rootView}>
       <SafeAreaView style={styles.safeView}>
-        <View>
-          <Text style={styles.thinText}>{getGreetingMessage()} Fatih!</Text>
-          <Text style={styles.boldText}>Hesaplama</Text>
+        <View style={{ marginTop: -15, marginLeft: 7 }}>
+          <Text style={{
+            fontSize: getHeight() * 0.02,
+            color: LIGHT_THEME_COLORS.GRAY1,
+            fontWeight: '300',
+          }}>{`${greetingMessage}, ${username}!`}</Text>
+          <Text style={{
+            fontSize: getHeight() * 0.025,
+            color: LIGHT_THEME_COLORS.BLACK,
+          }}>Hesaplama</Text>
         </View>
         <Button title='Save' onPress={handleStarButtonClick} />
+        <TouchableOpacity>
+          
+        </TouchableOpacity>
         <View style={styles.converter}>
           <View style={styles.converterItems}>
             <TouchableOpacity style={styles.converterButton} onPress={handleOpenSheetForMoneyFrom}>
@@ -230,3 +254,12 @@ const Converter = () => {
 }
 
 export default Converter
+
+const getRefreshToken = async setState => {
+  await AsyncStorage.getItem('user')
+    .then(response => {
+      const parsedData = JSON.parse(response)
+      setState(parsedData.id)
+    })
+    .catch(err => console.log(err))
+}

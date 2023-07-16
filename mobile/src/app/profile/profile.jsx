@@ -19,7 +19,6 @@ const Profile = () => {
   const { data: user, isError, error } = useGetUserQuery(userId)
   const userData = user?.user
 
-
   return (
     <View style={styles.container}>
       {userData && (

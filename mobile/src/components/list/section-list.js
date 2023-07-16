@@ -15,7 +15,7 @@ const SectionList = ({ data, searchText }) => {
 	const { colorScheme } = useColorScheme()
 
 	return (
-		<View className='flex-1 bg-white'>
+		<View className='flex-1'>
 			{filteredData.map((item, index) => (
 				filteredData.length > 1 ? (
 					<View className='flex-1 flex-col items-center' key={item.name}>
