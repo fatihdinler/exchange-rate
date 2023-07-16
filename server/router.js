@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const authValidations = require('./validations/auth-validations')
 const userValidations = require('./validations/user-validations')
+const favoriteValidations = require('./validations/favorite-validations')
 const { validate } = require('./middleware/validate.js')
 
 const controllers = {
@@ -20,6 +21,9 @@ const routes = [
 
   { method: 'get', path: '/rates', controller: 'rate', action: 'getLastRate', validation: '' },
   { method: 'get', path: '/money-converter', controller: 'rate', action: 'moneyConverter', validation: '' },
+
+  { method: 'get', path: '/favorites', controller: 'rate', action: 'getFavorites', validation: '' },
+  { method: 'post', path: '/favorites', controller: 'rate', action: 'getFavorites', validation: favoriteValidations.createFavorite },
 ]
 
 routes.forEach(route => {
