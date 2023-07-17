@@ -40,9 +40,10 @@ module.exports = ({
   const update = (id, props) => {
     delete props.id
 
-    return knex.update(props)
-      .from(tableName)
+    return knex
       .where({ id })
+      .update(props)
+      .from(tableName)
       .timeout(timeout)
   }
 

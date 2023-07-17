@@ -24,7 +24,8 @@ const routes = [
   { method: 'get', path: '/money-converter', controller: 'rate', action: 'moneyConverter', validation: '' },
 
   { method: 'get', path: '/favorites', controller: 'favorite', action: 'getFavorites', validation: '' },
-  { method: 'post', path: '/favorites', controller: 'favorite', action: 'createFavorite', validation: favoriteValidations.createFavorite },
+  { method: 'get', path: '/favorites/:id', controller: 'favorite', action: 'getFavorite', validation: '' },
+  { method: 'post', path: '/favorites', controller: 'favorite', action: 'createFavorite', validation: '' },
   { method: 'patch', path: '/favorites/:id', controller: 'favorite', action: 'updateFavorite', validation: '' }
 ]
 
