@@ -67,6 +67,5 @@ module.exports = {
   getFavorite: getFavorite,
   getFavorites: getFavorites,
   createFavorite: createFavorite,
-  updateFavorite: updateFavorite,
-  deleteFavorite: deleteFavorite,
+  updateFavorite: updateFavorite
 }
