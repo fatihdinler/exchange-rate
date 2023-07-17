@@ -58,7 +58,6 @@ const updateUserById = async (userId, updateBody) => {
   return updatedUser
 }
 
-
 const deleteUserById = async (userId) => {
   const user = await getUserById(userId)
   if (!user) return null

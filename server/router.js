@@ -9,6 +9,7 @@ const controllers = {
   auth: require('./controllers/auth-controller.js'),
   user: require('./controllers/user-controller.js'),
   rate: require('./controllers/rate-controller.js'),
+  favorite: require('./controllers/favorite-controller.js'),
 }
 
 const routes = [
@@ -22,8 +23,9 @@ const routes = [
   { method: 'get', path: '/rates', controller: 'rate', action: 'getLastRate', validation: '' },
   { method: 'get', path: '/money-converter', controller: 'rate', action: 'moneyConverter', validation: '' },
 
-  { method: 'get', path: '/favorites', controller: 'rate', action: 'getFavorites', validation: '' },
-  { method: 'post', path: '/favorites', controller: 'rate', action: 'getFavorites', validation: favoriteValidations.createFavorite },
+  { method: 'get', path: '/favorites', controller: 'favorite', action: 'getFavorites', validation: '' },
+  { method: 'post', path: '/favorites', controller: 'favorite', action: 'createFavorite', validation: favoriteValidations.createFavorite },
+  { method: 'patch', path: '/favorites/:id', controller: 'favorite', action: 'updateFavorite', validation: '' }
 ]
 
 routes.forEach(route => {
