@@ -3,22 +3,19 @@ import React, { useState, useEffect } from 'react'
 import Searchbar from '../../components/searchbar/searchbar'
 import SearchbarButton from '../../components/searchbar/searchbar-button'
 import Toolbar from '../../components/toolbar/toolbar'
-import axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useGetFavouritesQuery } from '../../redux/api'
 
 const Favourites = () => {
   const [searchText, setSearchText] = useState('')
+  const [userId, setUserId] = useState(null)
 
-  // useEffect(() => {
-  //   axios.get('http://localhost:3001/money-converter', {
-  //     params: {
-  //       moneyFrom: 'TRY',
-  //       moneyTo: 'USD',
-  //       amount: 100,
-  //     },
-  //   })
-  //   .then(response => console.log(response.data))
-  //   .catch(err => console.log(err))
-  // }, [])
+  useEffect(() => {
+    getUserInformation(setUserId)
+  }, [])
+
+  const { data: favourites, error } = useGetFavouritesQuery(userId)
+  console.log(favourites, error)
 
   return (
     <View style={styles.container}>
@@ -41,6 +38,15 @@ const Favourites = () => {
 }
 
 export default Favourites
+
+const getUserInformation = async setState => {
+  await AsyncStorage.getItem('user')
+    .then(response => {
+      const parsedData = JSON.parse(response)
+      setState(parsedData.id)
+    })
+    .catch(err => console.log(err))
+}
 
 const styles = StyleSheet.create({
   container: {
