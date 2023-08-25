@@ -25,6 +25,7 @@ const routes = [
 
   { method: 'get', path: '/favorites', controller: 'favorite', action: 'getFavorites', validation: '' },
   { method: 'get', path: '/favorites/:id', controller: 'favorite', action: 'getFavorite', validation: '' },
+
   { method: 'post', path: '/favorites', controller: 'favorite', action: 'createFavorite', validation: favoriteValidations.createFavorite },
   { method: 'patch', path: '/favorites/:id', controller: 'favorite', action: 'updateFavorite', validation: '' }
 ]

@@ -1,5 +1,5 @@
 const createFavorite = {
-  "email": "required|array",
+  "favorites": "required|array",
 }
 
 

@@ -1,18 +1,18 @@
 const { Favorites } = require('../models')
 
 const createFavorites = async (params) => {
-  const { moneyTypes, userId } = params
+  const { favorites, userId } = params
   let createdFavorites = null
 
   const body = {
-    favorites: moneyTypes,
+    favorites: JSON.stringify(favorites),
     user_id: userId
   }
-  const existUserByFavorites = await User.findOne({ user_id: user.user_id })
+  const existUserByFavorites = await Favorites.findOne({ user_id: body.user_id })
 
   if (!existUserByFavorites) {
     await Favorites.create(body)
-    createdFavorites = await Favorites.findOne({ user_id: existUserByFavorites.user_id })
+    createdFavorites = await Favorites.findOne({ user_id: userId })
   }
   return createdFavorites
 }
@@ -26,17 +26,12 @@ const getAllFavorites = async () => {
 }
 
 const updateFavorites = async (userId, favorites) => {
-  await Favorites.update(userId, favorites)
+
+  await Favorites.update(userId, { favorites: JSON.stringify(favorites) })
   const updatedFavoriteByUser = await getFavoriteByUserId(userId)
   return updatedFavoriteByUser
 }
 
-// const deleteFavoriteByUserId = async (userId) => {
-//   const favorite = await getFavoriteByUserId(userId)
-//   if (!favorite) return null
-//   await favorite.destroy()
-//   return favorite
-// }
 
 
 module.exports = {

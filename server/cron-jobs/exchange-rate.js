@@ -3,7 +3,7 @@ const axios = require('axios');
 const rateService = require('../services/rate-service')
 const config = require('../helper/config')
 
-const cronSchedule = cron.schedule('* */6 * * *', () => {
+const cronSchedule = cron.schedule('* * * * *', () => {
   axios.get('https://api.apilayer.com/exchangerates_data/latest?symbols=&base=TRY',
     {
       headers: {

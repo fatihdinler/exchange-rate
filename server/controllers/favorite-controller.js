@@ -1,9 +1,10 @@
 const favoriteServices = require("../services/favorite-service")
-const { createError, BAD_REQUEST } = require('../helper/error')
+const userServices = require("../services/user-service")
+const { createError, BAD_REQUEST, NOT_FOUND } = require('../helper/error')
 const moneyTypes = require('../money-types.json')
-
+const ROUTE_TYPE = { CREATE: 'create', UPDATE: 'update' }
 const getFavorite = async (req, res, next) => {
-  const favorite = await favoriteServices.getFavoriteByUserId(req.params.userId)
+  const favorite = await favoriteServices.getFavoriteByUserId(req.params.id)
   if (!favorite) {
     return next(createError({
       status: NOT_FOUND,
@@ -19,9 +20,15 @@ const getFavorites = async (req, res, next) => {
 }
 
 const createFavorite = async (req, res, next) => {
-  const validationErrors = favoriteValidations(req)
+  const validationErrors = await favoriteValidations(req, ROUTE_TYPE.CREATE)
+  const existUser = await userServices.getUserById(req.body.userId)
 
-  if (validationErrors.length > 0) return next(createError({ status: BAD_REQUEST, validationError: validationErrors }))
+  if (validationErrors.length > 0 || !existUser) {
+    return next(createError({
+      status: !existUser ? NOT_FOUND : BAD_REQUEST,
+      message: validationErrors || "User not found!",
+    }))
+  }
 
   const favorite = await favoriteServices.createFavorites(req.body)
   res.send({ favorite })
@@ -29,13 +36,14 @@ const createFavorite = async (req, res, next) => {
 
 
 const updateFavorite = async (req, res, next) => {
-  const existFavorite = await userServices.getFavoriteByUserId(req.params.userId)
-  const validationErrors = favoriteValidations(req)
+  const existFavorite = await favoriteServices.getFavoriteByUserId(req.params.id)
+  const existUser = existFavorite ? await userServices.getUserById(existFavorite.user_id) : null
+  const validationErrors = await favoriteValidations(req)
 
-  if (validationErrors.length > 0 || !existFavorite) {
+  if (validationErrors.length > 0 || !existFavorite || !existUser) {
     return next(createError({
-      status: BAD_REQUEST,
-      message: validationErrors || "Favorite not found!",
+      status: !existFavorite || !existUser ? NOT_FOUND : BAD_REQUEST,
+      message: validationErrors || !existUser ? "User not found!" : "Favorite not found",
     }))
   }
 
@@ -46,10 +54,12 @@ const updateFavorite = async (req, res, next) => {
 
 const favoriteValidations = async (req, routeType) => {
   let validationErrors = []
-  const existFavorite = await favoriteServices.getFavoriteByUserId(req.body.userId)
 
-  if (req.body.userId && existFavorite?.user_id === req.body.userId) {
-    validationErrors.push({ message: "User favorites already exists" })
+  if (routeType === ROUTE_TYPE.CREATE) {
+    const existFavorite = await favoriteServices.getFavoriteByUserId(req.body.userId)
+    if (req.body.userId && existFavorite?.user_id === parseInt(req.body.userId)) {
+      validationErrors.push({ message: "User favorites already exists" })
+    }
   }
 
   if (req.body.favorites !== undefined && req.body.favorites.length > 0) {
