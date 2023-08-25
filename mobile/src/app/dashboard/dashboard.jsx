@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, RefreshControl } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, RefreshControl, Image, ActivityIndicator } from 'react-native'
 import React, { useState, useCallback, useEffect } from 'react'
 import { useGetRatesQuery } from '../../redux/api'
 import Searchbar from '../../components/searchbar/searchbar'
@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 import SectionList from '../../components/list/section-list'
 
 const Dashboard = () => {
-    const [searchText, setSearchText] = useState('')
+    const [searchText, setSearchText] = useState('') 
     const { data: rates, isLoading, refetch } = useGetRatesQuery()
 
     const [isRefreshing, setIsRefreshing] = useState(false)
@@ -20,9 +20,13 @@ const Dashboard = () => {
     }, [refetch])
 
     const decoratedRates = decorateRates(rates || [])
+    const isComponentReady = !isLoading
 
     return (
         <View style={styles.container}>
+            {
+                isComponentReady ? (
+                    <View style={styles.layoutContainer}>
             <View style={styles.toolbar}>
                 <Toolbar screenName='Ana Sayfa' />
             </View>
@@ -47,6 +51,13 @@ const Dashboard = () => {
                     searchText={searchText}
                 />
             </ScrollView>
+            </View>
+                ) : (
+                    <View style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center'}}>
+                        <Text style={{fontSize: 25}}>LOADİNG...</Text>
+                    </View>
+                )
+            }
         </View>
     )
 }
@@ -60,14 +71,17 @@ const decorateRates = ratesObject => {
       const [value, increased] = Object.values(obj)
       decoratedRates.push({ name, value, increased })
     }
-  
     return decoratedRates
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        margin: 20,
+        // backgroundColor: 'white'
+    },
+    layoutContainer: {
+        flex: 1,
+        margin: 20
     },
     toolbar: {
         flex: 1 / 7,

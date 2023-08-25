@@ -6,7 +6,7 @@ import { LIGHT_THEME_COLORS } from '../../shared/constants/colors'
 import { useState } from 'react'
 
 const Input = ({
-   iconName, isSecureTextEntry, placeholder, value, onChangeText, isFocused, onFocus, keyboardType, autoCompleteType }) => {
+   iconName, isSecureTextEntry, placeholder, value, onChangeText, isFocused, onFocus, keyboardType, autoCompleteType, backgroundColor }) => {
   const [borderColor, setBorderColor] = useState(LIGHT_THEME_COLORS.GRAY1)
 
   return (
@@ -18,7 +18,12 @@ const Input = ({
         style={styles.logo}
       />
       <TextInput
-        style={[styles.input, { borderColor: isFocused ? LIGHT_THEME_COLORS.BLUE : borderColor, borderWidth: isFocused ? 2 : 1 }]}
+        style={
+          [styles.input, {
+            borderColor: isFocused ? LIGHT_THEME_COLORS.BLUE : borderColor,
+            borderWidth: isFocused ? 2 : 1,
+            backgroundColor: backgroundColor || null
+          }]}
         secureTextEntry={isSecureTextEntry}
         placeholder={placeholder}
         value={value}

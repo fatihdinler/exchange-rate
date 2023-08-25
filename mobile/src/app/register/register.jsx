@@ -16,7 +16,6 @@ const Register = () => {
     const [email, setEmail] = useState('')
     const [firstname, setFirstname] = useState('')
     const [lastname, setLastname] = useState('')
-    const [isTermUseAccepted, setIsTermUseAccepted] = useState(false)
 
     const { signUp } = useContext(AuthContext)
     const navigation = useNavigation()
@@ -35,7 +34,7 @@ const Register = () => {
                     <Text style={styles.loginHeader}>Aramıza Hoşgeldin !</Text>
                     <Text style={styles.loginSubHeader}>Bilgilerini doldurarak aramıza katıl.</Text>
                     <View style={styles.inputs}>
-                        <Text style={styles.inputHeader}>Ad</Text>
+                        <Text style={[styles.inputHeader, {marginTop: -15}]}>Ad</Text>
                         <Input
                             placeholder='John'
                             value={firstname}
@@ -69,12 +68,6 @@ const Register = () => {
                             onChangeText={text => setPassword(text)}
                         />
                     </View>
-                    {/* <CheckBox
-                        title='Kullanıcı sözleşmesini okudum & kabul ediyorum.'
-                        checked={isTermUseAccepted}
-                        
-                        onPress={() => setIsTermUseAccepted(!isTermUseAccepted)}
-                    /> */}
                     <View style={styles.buttonContainer}>
                         <LogButton
                             onPress={() => handleRegister()}
@@ -109,6 +102,7 @@ const styles = StyleSheet.create({
 
     form: {
         flex: 1 / 2,
+        marginTop: 10,
     },
 
     loginHeader: {
@@ -129,6 +123,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: 15,
         marginBottom: 5,
+        marginTop: 15
     },
     buttonContainer: {
         marginTop: 15,
